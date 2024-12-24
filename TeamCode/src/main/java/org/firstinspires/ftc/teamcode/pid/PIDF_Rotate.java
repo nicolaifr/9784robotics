@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 @Config
 public class PIDF_Rotate extends OpMode {
 
-private PIDController controller;
+    private PIDController controller;
     //P,I,D in the PID controller watch KookyBotz Video for more info
     public static double p = 0.007, i = 0, d = 0.0001;
     //feedforward
@@ -19,7 +19,7 @@ private PIDController controller;
     //arm target position
     public static int target = 0;
     //how many ticks in degree USING REV THROUGH BORE ENCODER
-    private final double ticks_in_degree = 8192/360;
+    private final double ticks_in_degree = ((double) 8192) /360;
     private DcMotorEx armRotate;
 
     @Override

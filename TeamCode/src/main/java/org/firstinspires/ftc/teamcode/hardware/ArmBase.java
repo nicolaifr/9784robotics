@@ -19,7 +19,7 @@ public class ArmBase extends HardwareBase {
     //feedforward
     public static double f = 0.15;
     //how many ticks in degree USING REV THROUGH BORE ENCODER
-    private final double ticks_in_degree = 8192/360;
+    private final double ticks_in_degree = (double) 8192 /360;
 
     @Override
     public void init(HardwareMap ahwMap, Telemetry t) {
@@ -51,10 +51,10 @@ public class ArmBase extends HardwareBase {
     public void armExtendControls(boolean leftBumper, boolean rightBumper, int extendPos) {
         //code that uses the pidf to do cool sigma stuff
         //reversing Y cuz im like pretty sure thats how it is
-        if (rightBumper == true) {
+        if (rightBumper) {
             armExtend.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             armExtend.setPower(0.75);
-        } else if (leftBumper == true) {
+        } else if (leftBumper) {
             armExtend.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             armExtend.setPower(-0.75);
         } else {
