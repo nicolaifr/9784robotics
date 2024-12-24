@@ -50,8 +50,8 @@ public class DriveTrainBase extends HardwareBase {
         double backRightPower = (y + x - rx) / denominator;
 
         leftFront.setPower(frontLeftPower);
-        rightFront.setPower(backLeftPower);
-        leftBack.setPower(frontRightPower);
+        leftBack.setPower(backLeftPower);
+        rightFront.setPower(frontRightPower);
         rightBack.setPower(backRightPower);
     }
 }
