@@ -9,6 +9,8 @@ public class ClawBase extends HardwareBase {
     public Servo clawClamp;
     public Servo clawWrist;
 
+    public double currentPos;
+
     @Override
     public void init(HardwareMap ahwMap, Telemetry t) {
         super.init(ahwMap, t);
@@ -26,12 +28,14 @@ public class ClawBase extends HardwareBase {
         }
     }
 
-    public void clawWrist(double leftJoystickX, double currentPos = 0) {
+    public void clawWrist(double leftJoystickX, double currentPos) {
         if (leftJoystickX >= 0.25 && currentPos < 1) {
             currentPos += 0.1;
+            currentPos = this.currentPos;
             clawWrist.setPosition(currentPos);
         } else if (leftJoystickX <= -0.25 && currentPos > 0){
             currentPos -= 0.1;
+            currentPos = this.currentPos;
             clawWrist.setPosition(currentPos);
         }
     }
