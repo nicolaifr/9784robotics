@@ -18,7 +18,7 @@ public class ClawBase extends HardwareBase {
         clawWrist = ahwMap.get(Servo.class, "clawWrist");
     }
 
-    public void clawClamp(double rightJoystickY, double currentPos = 0) {
+    public void clawClamp(double rightJoystickY, double currentPos) {
         if (rightJoystickY >= 0.25 && currentPos < 1) {
             currentPos += 0.1;
             clawClamp.setPosition(currentPos);
