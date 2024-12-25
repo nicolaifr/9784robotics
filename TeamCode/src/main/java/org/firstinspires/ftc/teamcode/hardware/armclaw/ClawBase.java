@@ -19,25 +19,38 @@ public class ClawBase extends HardwareBase {
         clawWrist = ahwMap.get(Servo.class, "clawWrist");
     }
 
-    public void clawClamp(double rightJoystickY, double currentPos) {
-        if (rightJoystickY >= 0.25 && currentPos < 1) {
+    public void clawClamp(double rightJoystickY, double currentPos, boolean option) {
+        if (rightJoystickY >= 0.25 && currentPos < 1 && !option) {
             currentPos += 0.1;
             clawClamp.setPosition(currentPos);
-        } else if (rightJoystickY <= -0.25 && currentPos > 0) {
+        } else if (rightJoystickY <= -0.25 && currentPos > 0 && !option) {
             currentPos -= 0.1;
             clawClamp.setPosition(currentPos);
         }
     }
 
-    public void clawWrist(double leftJoystickX, double currentPos) {
-        if (leftJoystickX >= 0.25 && currentPos < 1) {
+    public void clawWrist(double leftJoystickX, double currentPos, boolean option) {
+        if (leftJoystickX >= 0.25 && currentPos < 1 && !option) {
             currentPos += 0.1;
             currentPos = this.currentPos;
             clawWrist.setPosition(currentPos);
-        } else if (leftJoystickX <= -0.25 && currentPos > 0){
+        } else if (leftJoystickX <= -0.25 && currentPos > 0 && !option){
             currentPos -= 0.1;
             currentPos = this.currentPos;
             clawWrist.setPosition(currentPos);
         }
+    }
+
+    public void closeClaw(){
+        clawClamp.setPosition(1);
+    }
+    public void openClaw(){
+        clawClamp.setPosition(0);
+    }
+    public void setClampPos(double clampPos) {
+        clawClamp.setPosition(clampPos);
+    }
+    public void setWristPos(double wristPos){
+        clawWrist.setPosition(wristPos);
     }
 }

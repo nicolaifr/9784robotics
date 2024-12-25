@@ -35,11 +35,11 @@ public class IntoTheDeepTeleop extends OpMode {
     }
 
     public void armControls() {
-        arm.armExtendControls(gamepad2.left_bumper, gamepad2.right_bumper, arm.armExtend.getCurrentPosition());
-        arm.armRotateControls(gamepad2.right_trigger, gamepad2.left_trigger, arm.armRotate.getCurrentPosition());
+        arm.armExtendControls(gamepad2.left_bumper, gamepad2.right_bumper, arm.armExtend.getCurrentPosition(), gamepad2.options);
+        arm.armRotateControls(gamepad2.right_trigger, gamepad2.left_trigger, arm.armRotate.getCurrentPosition(), gamepad2.options);
     }
     public void clawControls() {
-        claw.clawClamp(gamepad2.right_stick_y, clampPos);
-        claw.clawWrist(gamepad2.left_stick_x, wristPos);
+        claw.clawClamp(gamepad2.right_stick_y, clampPos, gamepad2.options);
+        claw.clawWrist(gamepad2.left_stick_x, wristPos, gamepad2.options);
     }
 }
