@@ -40,11 +40,4 @@ public class ClawBase extends HardwareBase {
             clawWrist.setPosition(currentPos);
         }
     }
-
-    public void closeClamp() {
-        clawClamp.setPosition(1);
-    }
-    public void openClamp() {
-        clawClamp.setPosition(0);
-    }
 }
