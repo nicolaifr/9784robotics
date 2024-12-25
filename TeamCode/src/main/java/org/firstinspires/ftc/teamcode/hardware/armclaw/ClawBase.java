@@ -1,9 +1,10 @@
-package org.firstinspires.ftc.teamcode.hardware;
+package org.firstinspires.ftc.teamcode.hardware.armclaw;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.hardware.HardwareBase;
 
 public class ClawBase extends HardwareBase {
     public Servo clawClamp;
@@ -38,5 +39,12 @@ public class ClawBase extends HardwareBase {
             currentPos = this.currentPos;
             clawWrist.setPosition(currentPos);
         }
+    }
+
+    public void closeClamp() {
+        clawClamp.setPosition(1);
+    }
+    public void openClamp() {
+        clawClamp.setPosition(0);
     }
 }

@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.hardware.ArmBase;
-import org.firstinspires.ftc.teamcode.hardware.ClawBase;
-import org.firstinspires.ftc.teamcode.hardware.DriveTrainBase;
+import org.firstinspires.ftc.teamcode.hardware.armclaw.ArmBase;
+import org.firstinspires.ftc.teamcode.hardware.armclaw.ClawBase;
+import org.firstinspires.ftc.teamcode.hardware.drive.DriveTrainBase;
 
 @TeleOp
 public class IntoTheDeepTeleop extends OpMode {
