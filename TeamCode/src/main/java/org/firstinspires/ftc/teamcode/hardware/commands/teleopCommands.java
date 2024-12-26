@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.hardware.armclaw;
+package org.firstinspires.ftc.teamcode.hardware.commands;
 
 import org.firstinspires.ftc.teamcode.hardware.HardwareBase;
 

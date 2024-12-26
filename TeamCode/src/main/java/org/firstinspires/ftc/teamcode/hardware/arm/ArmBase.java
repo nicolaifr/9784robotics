@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.hardware.armclaw;
+package org.firstinspires.ftc.teamcode.hardware.arm;
 
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
