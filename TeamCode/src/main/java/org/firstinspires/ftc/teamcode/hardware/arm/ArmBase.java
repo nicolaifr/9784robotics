@@ -16,7 +16,8 @@ public class ArmBase extends HardwareBase {
     private PIDController rotateController;
     private PIDController extendController;
     //P,I,D in the PID controller watch KookyBotz Video for more info
-    public static double p = 0.007, extendP = 0.008, i = 0, d = 0.0001;
+    public static double pR = 0.007, iR = 0, dR = 0.0001;
+    public static double pE = 0.008, iE = 0, dE = 0.0001;
     //feedforward
     public static double f = 0.15;
     //how many ticks in degree USING REV THROUGH BORE ENCODER
@@ -24,8 +25,8 @@ public class ArmBase extends HardwareBase {
 
     @Override
     public void init(HardwareMap ahwMap, Telemetry t) {
-        rotateController = new PIDController(p, i, d);
-        extendController = new PIDController(extendP, i, d);
+        rotateController = new PIDController(pR, iR, dR);
+        extendController = new PIDController(pE, iE, dE);
 
         armRotate = ahwMap.get(DcMotor.class, "armMotorRotate");
         armExtend = ahwMap.get(DcMotor.class, "armMotorExtendLeft");
@@ -63,7 +64,7 @@ public class ArmBase extends HardwareBase {
         }
     }
     public void PIDFrotateTo(int rotateHoldPos) {
-        rotateController.setPID(p, i, d);
+
         int armPos = armRotate.getCurrentPosition();
         //PID MATH
         double pid = rotateController.calculate(armPos, rotateHoldPos);
@@ -77,7 +78,6 @@ public class ArmBase extends HardwareBase {
 
     public void PIDFextendTo(int extendHoldPos) {
         //loop code when "PLAY/Triangle" is hit loops over again while opmode is active
-        extendController.setPID(extendP, i, d);
         int armPos = armExtend.getCurrentPosition();
         //PID MATH
         double pid = extendController.calculate(armPos, extendHoldPos);
