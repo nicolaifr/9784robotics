@@ -13,11 +13,14 @@ public class ClawBase extends HardwareBase {
     public double clampPos;
     public double wristPos;
 
+    public boolean clampOpen;
+
     @Override
     public void init(HardwareMap ahwMap, Telemetry t) {
         super.init(ahwMap, t);
         clawClamp = ahwMap.get(Servo.class, "clawClamp");
         clawWrist = ahwMap.get(Servo.class, "clawWrist");
+        clampOpen = false;
     }
 
     public void clawClamp(double rightJoystickY, boolean option) {
@@ -42,9 +45,11 @@ public class ClawBase extends HardwareBase {
 
     public void closeClaw(){
         clawClamp.setPosition(1);
+        clampOpen = false;
     }
     public void openClaw(){
         clawClamp.setPosition(0);
+        clampOpen = true;
     }
     public void setClampPos(double clampPos) {
         clawClamp.setPosition(clampPos);

@@ -16,12 +16,16 @@ public class IntoTheDeepTeleop extends OpMode {
     ArmBase arm;
     //claw
     ClawBase claw;
+
+    int clawState;
     @Override
     public void init() {
         drive = new DriveTrainBase();
         arm = new ArmBase();
         claw = new ClawBase();
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
+        clawState = 0;
 
         drive.init(hardwareMap, telemetry);
         arm.init(hardwareMap, telemetry);
@@ -43,7 +47,23 @@ public class IntoTheDeepTeleop extends OpMode {
         arm.armRotateControls(gamepad2.right_trigger, gamepad2.left_trigger, arm.armRotate.getCurrentPosition(), gamepad2.options);
     }
     public void clawControls() {
-        claw.clawClamp(gamepad2.right_stick_y, gamepad2.options);
+//        claw.clawClamp(gamepad2.right_stick_y, gamepad2.options);
+        switch (clawState) {
+            case 0: // waits for gamepad2.a to be pressed
+                if (gamepad2.a) {
+                    clawState = 1;
+                }
+                break;
+            case 1: // opens/closes claw when gamepad2.a is released
+                if (!gamepad2.a) {
+                    if (claw.clampOpen) {
+                        claw.closeClaw();
+                    } else {
+                        claw.openClaw();
+                    }
+                    clawState = 0;
+                }
+        }
         claw.clawWrist(gamepad2.left_stick_x, gamepad2.options);
     }
 }
