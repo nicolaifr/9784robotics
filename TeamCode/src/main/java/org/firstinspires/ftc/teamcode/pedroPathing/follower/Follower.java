@@ -27,12 +27,14 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.PoseUpdater;
+import org.firstinspires.ftc.teamcode.pedroPathing.localization.localizers.OTOSLocalizer;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierPoint;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.MathFunctions;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
@@ -159,7 +161,7 @@ public class Follower {
      * @param hardwareMap HardwareMap required
      * @param localizer the localizer you wish to use
      */
-    public Follower(HardwareMap hardwareMap, Localizer localizer) {
+    public Follower(HardwareMap hardwareMap, OTOSLocalizer localizer) {
         this.hardwareMap = hardwareMap;
         initialize(localizer);
     }
@@ -208,7 +210,7 @@ public class Follower {
      * @param localizer the localizer you wish to use
      */
 
-    public void initialize(Localizer localizer) {
+    public void initialize(OTOSLocalizer localizer) {
         driveVectorScaler = new DriveVectorScaler(FollowerConstants.frontLeftVector);
         poseUpdater = new PoseUpdater(hardwareMap, localizer);
 
