@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -14,13 +16,12 @@ public class IntoTheDeepTeleop extends OpMode {
     ArmBase arm;
     //claw
     ClawBase claw;
-    double clampPos = 0;
-    double wristPos = 0;
     @Override
     public void init() {
         drive = new DriveTrainBase();
         arm = new ArmBase();
         claw = new ClawBase();
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         drive.init(hardwareMap, telemetry);
         arm.init(hardwareMap, telemetry);
@@ -32,6 +33,9 @@ public class IntoTheDeepTeleop extends OpMode {
         drive.driveJoystick(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
         armControls();
         clawControls();
+        telemetry.addData("clampPos", claw.clampPos);
+        telemetry.addData("wristPos", claw.wristPos);
+        telemetry.update();
     }
 
     public void armControls() {
@@ -39,7 +43,7 @@ public class IntoTheDeepTeleop extends OpMode {
         arm.armRotateControls(gamepad2.right_trigger, gamepad2.left_trigger, arm.armRotate.getCurrentPosition(), gamepad2.options);
     }
     public void clawControls() {
-        claw.clawClamp(gamepad2.right_stick_y, clampPos, gamepad2.options);
-        claw.clawWrist(gamepad2.left_stick_x, wristPos, gamepad2.options);
+        claw.clawClamp(gamepad2.right_stick_y, gamepad2.options);
+        claw.clawWrist(gamepad2.left_stick_x, gamepad2.options);
     }
 }
