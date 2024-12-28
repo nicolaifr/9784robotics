@@ -40,14 +40,14 @@ public class ArmBase extends HardwareBase {
         armExtend.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    public void armRotateControls(double rightTrigger, double leftTrigger, boolean option) {
+    public void armRotateControls(double rightTrigger, double leftTrigger) {
         //code that uses the pidf to do cool sigma stuff
         //reversing Y cuz im like pretty sure thats how it is
-        if (rightTrigger >= 0.25 && !option) {
+        if (rightTrigger >= 0.25) {
             armRotate.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             armRotate.setPower(0.4);
             rotatePos = armRotate.getCurrentPosition();
-        } else if (leftTrigger >= 0.25 && !option) {
+        } else if (leftTrigger >= 0.25) {
             armRotate.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             armRotate.setPower(-0.4);
             rotatePos = armRotate.getCurrentPosition();
@@ -55,14 +55,14 @@ public class ArmBase extends HardwareBase {
             PIDFrotateTo(rotatePos);
         }
     }
-    public void armExtendControls(boolean leftBumper, boolean rightBumper, boolean option) {
+    public void armExtendControls(boolean leftBumper, boolean rightBumper) {
         //code that uses the pidf to do cool sigma stuff
         //reversing Y cuz im like pretty sure thats how it is
-        if (rightBumper && !option) {
+        if (rightBumper) {
             armExtend.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             armExtend.setPower(0.4);
             extendPos = armExtend.getCurrentPosition();
-        } else if (leftBumper && !option) {
+        } else if (leftBumper) {
             armExtend.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             armExtend.setPower(-0.4);
             extendPos = armExtend.getCurrentPosition();

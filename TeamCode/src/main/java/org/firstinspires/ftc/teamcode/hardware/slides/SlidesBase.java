@@ -15,6 +15,8 @@ public class SlidesBase extends HardwareBase {
     //PID rotate stuff
     private PIDController horizController;
     private PIDController vertController;
+    int vertCurrentPos;
+    int horizCurrentPos;
     //P,I,D in the PID controller watch KookyBotz Video for more info
     public static double p = 0, i = 0, d = 0.0001;
     //feedforward
@@ -36,30 +38,34 @@ public class SlidesBase extends HardwareBase {
         vertSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    public void verticalSlidesControls(double rightTrigger, double leftTrigger, int vertPos, boolean option) {
+    public void verticalSlidesControls(double rightTrigger, double leftTrigger) {
         //code that uses the pidf to do cool sigma stuff
         //reversing Y cuz im like pretty sure thats how it is
-        if (rightTrigger >= 0.25 && !option) {
+        if (rightTrigger >= 0.25) {
             vertSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             vertSlides.setPower(0.6);
-        } else if (leftTrigger >= 0.25 && !option) {
+            vertCurrentPos = vertSlides.getCurrentPosition();
+        } else if (leftTrigger >= 0.25) {
             vertSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             vertSlides.setPower(-0.6);
+            vertCurrentPos = vertSlides.getCurrentPosition();
         } else {
-            PIDF_VertTo(vertPos);
+            PIDF_VertTo(vertCurrentPos);
         }
     }
-    public void horizSlidesControls(boolean leftBumper, boolean rightBumper, int horizPos, boolean option) {
+    public void horizSlidesControls(boolean leftBumper, boolean rightBumper) {
         //code that uses the pidf to do cool sigma stuff
         //reversing Y cuz im like pretty sure thats how it is
-        if (rightBumper && !option) {
+        if (rightBumper) {
             horizSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             horizSlides.setPower(0.75);
-        } else if (leftBumper && !option) {
+            horizCurrentPos = horizSlides.getCurrentPosition();
+        } else if (leftBumper) {
             horizSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             horizSlides.setPower(-0.75);
+            horizCurrentPos = horizSlides.getCurrentPosition();
         } else {
-            PIDF_HorizTo(horizPos);
+            PIDF_HorizTo(horizCurrentPos);
         }
     }
     public void PIDF_VertTo(int vertTargetPos) {
