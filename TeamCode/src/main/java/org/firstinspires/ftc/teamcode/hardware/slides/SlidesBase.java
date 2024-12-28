@@ -18,7 +18,8 @@ public class SlidesBase extends HardwareBase {
     int vertCurrentPos;
     int horizCurrentPos;
     //P,I,D in the PID controller watch KookyBotz Video for more info
-    public static double p = 0, i = 0, d = 0.0001;
+    public static double pH = 0, iH = 0, dH = 0.0001;
+    public static double pV = 0, iV = 0, dV = 0.0001;
     //feedforward
     public static double f = 0;
     //how many ticks in degree USING REV THROUGH BORE ENCODER
@@ -26,8 +27,8 @@ public class SlidesBase extends HardwareBase {
 
     @Override
     public void init(HardwareMap ahwMap, Telemetry t) {
-        horizController = new PIDController(p, i, d);
-        vertController = new PIDController(p, i, d);
+        horizController = new PIDController(pH, iH, dH);
+        vertController = new PIDController(pV, iV, dV);
 
         horizSlides = ahwMap.get(DcMotor.class, "horizontalSlides");
         vertSlides = ahwMap.get(DcMotor.class, "verticalSlides");
@@ -69,7 +70,7 @@ public class SlidesBase extends HardwareBase {
         }
     }
     public void PIDF_VertTo(int vertTargetPos) {
-        vertController.setPID(p, i, d);
+        vertController.setPID(pV, iV, dV);
         int vertCurrentPos = vertSlides.getCurrentPosition();
         //PID MATH
         double pid = vertController.calculate(vertCurrentPos, vertTargetPos);
@@ -83,7 +84,7 @@ public class SlidesBase extends HardwareBase {
 
     public void PIDF_HorizTo(int horizTargetPos) {
         //loop code when "PLAY/Triangle" is hit loops over again while opmode is active
-        horizController.setPID(p, i, d);
+        horizController.setPID(pH, iH, dH);
         int horizCurrentPos = horizSlides.getCurrentPosition();
         //PID MATH
         double pid = horizController.calculate(horizCurrentPos, horizTargetPos);
