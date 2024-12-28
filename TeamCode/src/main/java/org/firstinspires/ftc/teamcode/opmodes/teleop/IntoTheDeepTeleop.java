@@ -37,14 +37,16 @@ public class IntoTheDeepTeleop extends OpMode {
         drive.driveJoystick(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
         armControls();
         clawControls();
+        telemetry.addData("armRotatePos", arm.armRotate.getCurrentPosition());
+        telemetry.addData("armExtendPos", arm.armExtend.getCurrentPosition());
         telemetry.addData("clampPos", claw.clampPos);
         telemetry.addData("wristPos", claw.wristPos);
         telemetry.update();
     }
 
     public void armControls() {
-        arm.armExtendControls(gamepad2.left_bumper, gamepad2.right_bumper, arm.armExtend.getCurrentPosition(), gamepad2.options);
-        arm.armRotateControls(gamepad2.right_trigger, gamepad2.left_trigger, arm.armRotate.getCurrentPosition(), gamepad2.options);
+        arm.armExtendControls(gamepad2.left_bumper, gamepad2.right_bumper, gamepad2.options);
+        arm.armRotateControls(gamepad2.right_trigger, gamepad2.left_trigger, gamepad2.options);
     }
     public void clawControls() {
 //        claw.clawClamp(gamepad2.right_stick_y, gamepad2.options);

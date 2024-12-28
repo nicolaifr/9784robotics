@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.hardware.HardwareBase;
 public class ArmBase extends HardwareBase {
     public DcMotor armRotate;
     public DcMotor armExtend;
-
-
+    public int rotatePos;
+    public int extendPos;
 //PID rotate stuff
     private PIDController rotateController;
     private PIDController extendController;
@@ -28,6 +28,9 @@ public class ArmBase extends HardwareBase {
         rotateController = new PIDController(pR, iR, dR);
         extendController = new PIDController(pE, iE, dE);
 
+        rotateController.setPID(pR, iR, dR);
+        extendController.setPID(pE, iE, dE);
+
         armRotate = ahwMap.get(DcMotor.class, "armMotorRotate");
         armExtend = ahwMap.get(DcMotor.class, "armMotorExtendLeft");
 
@@ -37,28 +40,32 @@ public class ArmBase extends HardwareBase {
         armExtend.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    public void armRotateControls(double rightTrigger, double leftTrigger, int rotatePos, boolean option) {
+    public void armRotateControls(double rightTrigger, double leftTrigger, boolean option) {
         //code that uses the pidf to do cool sigma stuff
         //reversing Y cuz im like pretty sure thats how it is
         if (rightTrigger >= 0.25 && !option) {
             armRotate.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            armRotate.setPower(0.6);
+            armRotate.setPower(0.4);
+            rotatePos = armRotate.getCurrentPosition();
         } else if (leftTrigger >= 0.25 && !option) {
             armRotate.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            armRotate.setPower(-0.6);
+            armRotate.setPower(-0.4);
+            rotatePos = armRotate.getCurrentPosition();
         } else {
             PIDFrotateTo(rotatePos);
         }
     }
-    public void armExtendControls(boolean leftBumper, boolean rightBumper, int extendPos, boolean option) {
+    public void armExtendControls(boolean leftBumper, boolean rightBumper, boolean option) {
         //code that uses the pidf to do cool sigma stuff
         //reversing Y cuz im like pretty sure thats how it is
         if (rightBumper && !option) {
             armExtend.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            armExtend.setPower(0.75);
+            armExtend.setPower(0.4);
+            extendPos = armExtend.getCurrentPosition();
         } else if (leftBumper && !option) {
             armExtend.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            armExtend.setPower(-0.75);
+            armExtend.setPower(-0.4);
+            extendPos = armExtend.getCurrentPosition();
         } else {
             PIDFextendTo(extendPos);
         }

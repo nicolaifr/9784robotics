@@ -44,11 +44,11 @@ public class ClawBase extends HardwareBase {
     }
 
     public void closeClaw(){
-        clawClamp.setPosition(1);
+        clawClamp.setPosition(0.9);
         clampOpen = false;
     }
     public void openClaw(){
-        clawClamp.setPosition(0);
+        clawClamp.setPosition(0.1);
         clampOpen = true;
     }
     public void setClampPos(double clampPos) {
