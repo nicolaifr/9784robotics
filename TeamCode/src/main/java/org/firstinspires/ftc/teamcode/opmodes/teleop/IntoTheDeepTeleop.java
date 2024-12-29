@@ -12,22 +12,14 @@ import org.firstinspires.ftc.teamcode.hardware.drive.DriveTrainBase;
 @TeleOp
 public class IntoTheDeepTeleop extends OpMode {
     DriveTrainBase drive;
-    //arm
-    ArmBase arm;
-    //claw
-    ClawBase claw;
 
     int clawState;
     @Override
     public void init() {
         drive = new DriveTrainBase();
-        arm = new ArmBase();
-        claw = new ClawBase();
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         drive.init(hardwareMap, telemetry);
-        arm.init(hardwareMap, telemetry);
-        claw.init(hardwareMap, telemetry);
     }
 
     @Override
@@ -39,19 +31,11 @@ public class IntoTheDeepTeleop extends OpMode {
     }
 
     public void armControls() {
-        arm.armExtendControls(gamepad2.left_bumper, gamepad2.right_bumper);
-        arm.armRotateControls(gamepad2.right_trigger, gamepad2.left_trigger);
     }
     public void clawControls() {
-        claw.clawClamp(gamepad2.right_stick_button);
-        claw.clawWrist(gamepad2.right_stick_x);
     }
 
     public void getTelemetry() {
-        telemetry.addData("armRotatePos", arm.armRotate.getCurrentPosition());
-        telemetry.addData("armExtendPos", arm.armExtend.getCurrentPosition());
-        telemetry.addData("clampPos", claw.clampPos);
-        telemetry.addData("wristPos", claw.wristPos);
         telemetry.update();
     }
 }
