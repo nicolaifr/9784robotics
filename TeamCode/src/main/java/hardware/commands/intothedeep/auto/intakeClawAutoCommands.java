@@ -4,9 +4,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import hardware.claw.ClawBase;
+import hardware.claw.IntakeClawBase;
 
-public class clawAutoCommands extends ClawBase {
+public class intakeClawAutoCommands extends IntakeClawBase {
     public Servo clawClamp;
     public Servo clawWrist;
     @Override

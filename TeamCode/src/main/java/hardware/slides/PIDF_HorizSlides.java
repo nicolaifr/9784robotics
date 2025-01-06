@@ -3,10 +3,12 @@ package hardware.slides;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 @Config
+@TeleOp
 public class PIDF_HorizSlides extends OpMode {
 
     private PIDController controller;
@@ -25,7 +27,7 @@ public class PIDF_HorizSlides extends OpMode {
         //initialization code when "INIT" is pressed
         controller = new PIDController(p, i, d);
 
-        horizSlides = hardwareMap.get(DcMotorEx.class, "horizontalSlides");
+        horizSlides = hardwareMap.get(DcMotorEx.class, "horizSlides");
         horizSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
@@ -43,6 +45,7 @@ public class PIDF_HorizSlides extends OpMode {
         //setting motor power after all those calculations
         horizSlides.setPower(power);
         //telemetry for tuning
+        getTelemetry();
     }
 
     public int getTarget() {
@@ -51,5 +54,13 @@ public class PIDF_HorizSlides extends OpMode {
 
     public void setTarget(int newTarget){
         target = newTarget;
+    }
+
+    public void getTelemetry(){
+        telemetry.addData("location", horizSlides.getCurrentPosition());
+        telemetry.addData("target", target);
+        telemetry.addData("poewr", horizSlides.getPower());
+        telemetry.update();
+
     }
 }

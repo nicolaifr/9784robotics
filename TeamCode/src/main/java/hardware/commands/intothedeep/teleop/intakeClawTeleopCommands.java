@@ -5,10 +5,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-import hardware.claw.ClawBase;
+import hardware.claw.IntakeClawBase;
 
 
-public class clawTeleopCommands extends ClawBase {
+public class intakeClawTeleopCommands extends IntakeClawBase {
     public Servo clawClamp;
     public Servo clawWrist;
     @Override

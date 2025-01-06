@@ -5,24 +5,26 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import hardware.claw.ClawBase;
+import hardware.claw.IntakeClawBase;
+import hardware.claw.OutTakeBase;
 import hardware.drive.DriveTrainBase;
 
 
 @TeleOp
 public class IntoTheDeepTeleop extends OpMode {
     DriveTrainBase drive;
-    ClawBase claw;
+    OutTakeBase outtake;
 
     int clawState;
     @Override
     public void init() {
         drive = new DriveTrainBase();
-        claw = new ClawBase();
+        outtake = new OutTakeBase();
+
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         drive.init(hardwareMap, telemetry);
-        claw.init(hardwareMap, telemetry);
+        outtake.init(hardwareMap, telemetry);
     }
 
     @Override
@@ -32,8 +34,11 @@ public class IntoTheDeepTeleop extends OpMode {
         getTelemetry();
     }
     public void clawControls() {
-        claw.clawClamp(gamepad2.right_stick_button);
-        claw.clawWrist(gamepad2.right_stick_x);
+    }
+    public void OutTakeControls(){
+        outtake.clawClamp(gamepad2.left_stick_button);
+        outtake.diffyArm(gamepad2.left_stick_y);
+        outtake.clawWrist(gamepad2.left_stick_x);
     }
 
     public void getTelemetry() {

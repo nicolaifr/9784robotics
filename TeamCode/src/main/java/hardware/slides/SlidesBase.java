@@ -10,6 +10,7 @@ import hardware.HardwareBase;
 public class SlidesBase extends HardwareBase {
     public DcMotor vertSlides;
     public DcMotor horizSlides;
+    public DcMotor vertSlidesSecond;
 
 
     //PID rotate stuff
@@ -32,11 +33,14 @@ public class SlidesBase extends HardwareBase {
 
         horizSlides = ahwMap.get(DcMotor.class, "horizontalSlides");
         vertSlides = ahwMap.get(DcMotor.class, "verticalSlides");
+        vertSlidesSecond = ahwMap.get(DcMotor.class, "vertSlidesSecond");
 
         horizSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         horizSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         vertSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         vertSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        vertSlidesSecond.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        vertSlidesSecond.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public void verticalSlidesControls(double rightTrigger, double leftTrigger) {
@@ -44,11 +48,15 @@ public class SlidesBase extends HardwareBase {
         //reversing Y cuz im like pretty sure thats how it is
         if (rightTrigger >= 0.25) {
             vertSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            vertSlidesSecond.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             vertSlides.setPower(0.6);
+            vertSlidesSecond.setPower(-0.6);
             vertCurrentPos = vertSlides.getCurrentPosition();
         } else if (leftTrigger >= 0.25) {
             vertSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            vertSlidesSecond.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             vertSlides.setPower(-0.6);
+            vertSlidesSecond.setPower(-0.6);
             vertCurrentPos = vertSlides.getCurrentPosition();
         } else {
             PIDF_VertTo(vertCurrentPos);
@@ -80,6 +88,7 @@ public class SlidesBase extends HardwareBase {
         double power = pid + ff;
         //setting motor power after all those calculations
         vertSlides.setPower(power);
+        vertSlidesSecond.setPower(power);
     }
 
     public void PIDF_HorizTo(int horizTargetPos) {

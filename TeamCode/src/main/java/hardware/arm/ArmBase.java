@@ -46,11 +46,11 @@ public class ArmBase extends HardwareBase {
         //reversing Y cuz im like pretty sure thats how it is
         if (rightTrigger >= 0.25) {
             armRotate.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            armRotate.setPower(0.4);
+            armRotate.setPower(0.8);
             rotatePos = armRotate.getCurrentPosition();
         } else if (leftTrigger >= 0.25) {
             armRotate.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            armRotate.setPower(-0.4);
+            armRotate.setPower(-0.6);
             rotatePos = armRotate.getCurrentPosition();
         } else {
             PIDFrotateTo(rotatePos);
@@ -61,11 +61,11 @@ public class ArmBase extends HardwareBase {
         //reversing Y cuz im like pretty sure thats how it is
         if (rightBumper) {
             armExtend.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            armExtend.setPower(0.4);
+            armExtend.setPower(0.8);
             extendPos = armExtend.getCurrentPosition();
         } else if (leftBumper) {
             armExtend.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            armExtend.setPower(-0.4);
+            armExtend.setPower(-0.8);
             extendPos = armExtend.getCurrentPosition();
         } else {
             PIDFextendTo(extendPos);

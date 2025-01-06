@@ -1,5 +1,6 @@
 package hardware.claw;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -7,9 +8,11 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import hardware.HardwareBase;
 
-public class ClawBase extends HardwareBase {
+public class IntakeClawBase extends HardwareBase {
     public Servo clawClamp;
     public Servo clawWrist;
+    public DcMotor monsterPivot;
+    public Servo miniPivot;
 
     public double clampPos;
     public double wristPos;
@@ -28,10 +31,10 @@ public class ClawBase extends HardwareBase {
 
     public void clawWrist(double rightJoystickX) {
         if (rightJoystickX >= 0.25 && wristPos < 1) {
-            wristPos += 0.1;
+            wristPos += 0.05;
             clawWrist.setPosition(wristPos);
         } else if (rightJoystickX <= -0.25 && wristPos > 0){
-            wristPos -= 0.1;
+            wristPos -= 0.05;
             clawWrist.setPosition(wristPos);
         }
     }
@@ -56,11 +59,11 @@ public class ClawBase extends HardwareBase {
     }
 
     public void closeClaw(){
-        clawClamp.setPosition(0.9);
+        clawClamp.setPosition(1);
         clampOpen = false;
     }
     public void openClaw(){
-        clawClamp.setPosition(0.1);
+        clawClamp.setPosition(0.4);
         clampOpen = true;
     }
     public void setClampPos(double clampPos) {

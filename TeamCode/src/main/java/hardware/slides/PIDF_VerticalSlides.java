@@ -3,10 +3,12 @@ package hardware.slides;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 @Config
+@TeleOp
 public class PIDF_VerticalSlides extends OpMode {
 
     private PIDController controller;
@@ -19,14 +21,17 @@ public class PIDF_VerticalSlides extends OpMode {
     //how many ticks in degree USING REV THROUGH BORE ENCODER
     private final double ticks_in_degree = 8192/360;
     private DcMotorEx vertSlides;
+    public DcMotorEx vertSlidesSecond;
 
     @Override
     public void init() {
         //initialization code when "INIT" is pressed
         controller = new PIDController(p, i, d);
 
-        vertSlides = hardwareMap.get(DcMotorEx.class, "verticalSlides");
+        vertSlides = hardwareMap.get(DcMotorEx.class, "vertSlides");
+        vertSlidesSecond = hardwareMap.get(DcMotorEx.class, "vertSlidesSecond");
         vertSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        vertSlidesSecond.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     @Override
@@ -42,6 +47,7 @@ public class PIDF_VerticalSlides extends OpMode {
         double power = pid + ff;
         //setting motor power after all those calculations
         vertSlides.setPower(power);
+        vertSlidesSecond.setPower(power);
         //telemetry for tuning
     }
 
