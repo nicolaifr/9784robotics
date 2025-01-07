@@ -1,4 +1,4 @@
-package opmode.teleop;
+package hardware.claw;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -8,7 +8,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import hardware.HardwareBase;
 
-@TeleOp
 public class OutTake extends HardwareBase {
 
     Servo testServo;
@@ -23,7 +22,7 @@ public class OutTake extends HardwareBase {
     boolean clampClosed;
     @Override
     public void init(HardwareMap ahwMap, Telemetry t) {
-        super.init(HardwareMap, Telemetry);
+        super.init(ahwMap, t);
         testServo = ahwMap.get(Servo.class, "ArmLeft");
         testServo1 = ahwMap.get(Servo.class, "ArmRight");
         wrist = ahwMap.get(Servo.class, "clawClamp");
