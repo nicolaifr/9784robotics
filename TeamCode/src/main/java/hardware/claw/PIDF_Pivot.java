@@ -1,18 +1,22 @@
 package hardware.claw;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
+@TeleOp
+@Config
 public class PIDF_Pivot extends OpMode {
     private PIDController controller;
     //P,I,D in the PID controller watch KookyBotz Video for more info
-    public static double p = 0, i = 0, d = 0;
+    public static double p = 0.03, i = 0, d = 0.001;
     //feedforward
-    public static double f = 0;
+    public static double f = 0.1;
     //arm target position
     public static int target = 0;
     //how many ticks in degree USING REV THROUGH BORE ENCODER
@@ -27,6 +31,7 @@ public class PIDF_Pivot extends OpMode {
 
         pivot = hardwareMap.get(DcMotorEx.class, "pivotMotor");
         pivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        pivot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
 
@@ -63,6 +68,4 @@ public class PIDF_Pivot extends OpMode {
         target = rotateTarget;
         loop();
     }
-}
-
 }
