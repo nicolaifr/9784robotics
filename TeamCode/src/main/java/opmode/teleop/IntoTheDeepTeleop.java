@@ -5,8 +5,6 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import hardware.claw.IntakeClawBase;
-import hardware.claw.OutTakeBase;
 import hardware.drive.DriveTrainBase;
 
 
