@@ -22,10 +22,10 @@ public class OutTakeBase extends HardwareBase {
     @Override
     public void init(HardwareMap ahwMap, Telemetry t) {
         super.init(ahwMap, t);
-        clawClamp = ahwMap.get(Servo.class, "clawClamp");
+        clawClamp = ahwMap.get(Servo.class, "clawXRotate");
         ArmLeft = ahwMap.get(Servo.class, "ArmLeft");
         ArmRight = ahwMap.get(Servo.class, "ArmRight");
-        clawXRotate = ahwMap.get(Servo.class, "clawXRotate");
+        clawXRotate = ahwMap.get(Servo.class, "clawClamp");
 
 
         clampOpen = false;
