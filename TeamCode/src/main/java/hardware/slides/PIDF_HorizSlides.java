@@ -13,9 +13,9 @@ public class PIDF_HorizSlides extends OpMode {
 
     private PIDController controller;
     //P,I,D in the PID controller watch KookyBotz Video for more info
-    public static double p = 0, i = 0, d = 0;
+    public static double p = 0.07, i = 0, d = 0.001;
     //feedforward
-    public static double f = 0;
+    public static double f = 0.3;
     //arm target position
     public static int target = 0;
     //how many ticks in degree USING REV THROUGH BORE ENCODER
@@ -28,7 +28,8 @@ public class PIDF_HorizSlides extends OpMode {
         controller = new PIDController(p, i, d);
 
         horizSlides = hardwareMap.get(DcMotorEx.class, "horizSlides");
-        horizSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        horizSlides.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        horizSlides.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @Config
 @TeleOp
@@ -13,9 +14,9 @@ public class PIDF_VerticalSlides extends OpMode {
 
     private PIDController controller;
     //P,I,D in the PID controller watch KookyBotz Video for more info
-    public static double p = 0, i = 0, d = 0;
+    public static double p = 0.04, i = 0, d = 0.001;
     //feedforward
-    public static double f = 0;
+    public static double f = 0.001;
     //arm target position
     public static int target = 0;
     //how many ticks in degree USING REV THROUGH BORE ENCODER
@@ -30,8 +31,11 @@ public class PIDF_VerticalSlides extends OpMode {
 
         vertSlides = hardwareMap.get(DcMotorEx.class, "vertSlides");
         vertSlidesSecond = hardwareMap.get(DcMotorEx.class, "vertSlidesSecond");
-        vertSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        vertSlides.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        vertSlides.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         vertSlidesSecond.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        vertSlidesSecond.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+
     }
 
     @Override
@@ -49,6 +53,7 @@ public class PIDF_VerticalSlides extends OpMode {
         vertSlides.setPower(power);
         vertSlidesSecond.setPower(power);
         //telemetry for tuning
+        getTelemetry();
     }
 
     public int getTarget() {
@@ -57,5 +62,12 @@ public class PIDF_VerticalSlides extends OpMode {
 
     public void setTarget(int newTarget){
         target = newTarget;
+    }
+    public void getTelemetry(){
+        telemetry.addData("location", vertSlides.getCurrentPosition());
+        telemetry.addData("target", target);
+        telemetry.addData("poewr", vertSlides.getPower());
+        telemetry.update();
+
     }
 }
