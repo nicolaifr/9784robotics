@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 public class PIDF_Pivot extends OpMode {
     private PIDController controller;
     //P,I,D in the PID controller watch KookyBotz Video for more info
-    public static double p = 0.03, i = 0, d = 0.001;
+    public static double p = 0.02, i = 0, d = 0.001;
     //feedforward
     public static double f = 0.1;
     //arm target position
@@ -47,7 +47,7 @@ public class PIDF_Pivot extends OpMode {
         //power calculated
         double power = pid + ff;
         //setting motor power after all those calculations
-        pivot.setPower(power);
+        pivot.setPower(power*0.2);
         //telemetry for tuning
         telemetry.addData("pos", armPos);
         telemetry.addData("target", target);

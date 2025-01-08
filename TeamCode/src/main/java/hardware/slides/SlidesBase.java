@@ -20,9 +20,10 @@ public class SlidesBase extends HardwareBase {
     int horizCurrentPos;
     //P,I,D in the PID controller watch KookyBotz Video for more info
     public static double pH = 0, iH = 0, dH = 0.0001;
-    public static double pV = 0, iV = 0, dV = 0.0001;
+    public static double pV = 0.04, iV = 0, dV = 0.001;
     //feedforward
-    public static double f = 0;
+    public static double Vf = 0.001;
+    public static double Hf = 0.3;
     //how many ticks in degree USING REV THROUGH BORE ENCODER
     private final double ticks_in_degree = (double) 8192/360;
 
@@ -31,8 +32,8 @@ public class SlidesBase extends HardwareBase {
         horizController = new PIDController(pH, iH, dH);
         vertController = new PIDController(pV, iV, dV);
 
-        horizSlides = ahwMap.get(DcMotor.class, "horizontalSlides");
-        vertSlides = ahwMap.get(DcMotor.class, "verticalSlides");
+        horizSlides = ahwMap.get(DcMotor.class, "horizSlides");
+        vertSlides = ahwMap.get(DcMotor.class, "vertSlides");
         vertSlidesSecond = ahwMap.get(DcMotor.class, "vertSlidesSecond");
 
         horizSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -83,7 +84,7 @@ public class SlidesBase extends HardwareBase {
         //PID MATH
         double pid = vertController.calculate(vertCurrentPos, vertTargetPos);
         //feedforward math
-        double ff = Math.cos(Math.toRadians(vertTargetPos/ticks_in_degree)) * f;
+        double ff = Math.cos(Math.toRadians(vertTargetPos/ticks_in_degree)) * Vf;
         //power calculated
         double power = pid + ff;
         //setting motor power after all those calculations
@@ -98,7 +99,7 @@ public class SlidesBase extends HardwareBase {
         //PID MATH
         double pid = horizController.calculate(horizCurrentPos, horizTargetPos);
         //feedforward math
-        double ff = Math.cos(Math.toRadians(horizTargetPos/ticks_in_degree)) * f;
+        double ff = Math.cos(Math.toRadians(horizTargetPos/ticks_in_degree)) * Hf;
         //power calculated
         double power = pid + ff;
         //setting motor power after all those calculations
