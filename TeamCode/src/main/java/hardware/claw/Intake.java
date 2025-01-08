@@ -1,0 +1,117 @@
+package hardware.claw;
+
+import com.arcrobotics.ftclib.controller.PIDController;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+import hardware.HardwareBase;
+
+public class Intake extends HardwareBase {
+    private PIDController pivotController;
+    public static double p = 0.02, i = 0, d = 0.001;
+    public static double f = 0.1;
+    private final double ticks_in_degree = ((double) 8192) /360;
+
+
+
+    public Servo clawClamp;
+    public Servo clawWrist;
+    public DcMotor monsterPivot;
+    public Servo miniPivot;
+
+    public double clampPos;
+    public double wristPos;
+    public double pivotPos;
+    public int monsterPivotPos;
+
+    public boolean clampOpen;
+
+    int clawState = 0;
+
+    @Override
+    public void init(HardwareMap ahwMap, Telemetry t) {
+        super.init(ahwMap, t);
+
+        pivotController = new PIDController(p, i, d);
+
+        clawClamp = ahwMap.get(Servo.class, "intakeClamp");
+        clawWrist = ahwMap.get(Servo.class, "intakeWrist");
+        miniPivot = ahwMap.get(Servo.class, "intakePitch");
+        monsterPivot = ahwMap.get(DcMotor.class, "pivotMotor");
+
+        monsterPivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        monsterPivot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        clampOpen = false;
+        pivotPos = 0;
+        wristPos = 0;
+    }
+
+    public void clawWrist(boolean b, boolean x) {
+        if (b && wristPos != 1) {
+            wristPos += 0.03;
+            clawWrist.setPosition(wristPos);
+        } else if (x && wristPos != 0){
+            wristPos -= 0.03;
+            clawWrist.setPosition(wristPos);
+        }
+    }
+
+    public void miniPivot(double rT, double lT) {
+        if (rT >= 0.5 && pivotPos != 1) {
+            pivotPos += 0.03;
+            miniPivot.setPosition(pivotPos);
+        } else if (lT >= 0.5 && pivotPos != 0) {
+            pivotPos -= 0.03;
+            miniPivot.setPosition(pivotPos);
+        }
+    }
+
+    public void clawClamp(boolean a) {
+        if (a) {
+            openClaw();
+        } else {
+            closeClaw();
+        }
+    }
+
+    public void closeClaw(){
+        clawClamp.setPosition(1);
+        clampOpen = false;
+    }
+    public void openClaw(){
+        clawClamp.setPosition(0.4);
+        clampOpen = true;
+    }
+
+
+
+
+    public void bigPivot(boolean rB, boolean lB) {
+        if (rB) {
+            monsterPivot.setPower(0.4);
+            monsterPivotPos = monsterPivot.getCurrentPosition();
+        } else if (lB) {
+            monsterPivot.setPower(-0.4);
+            monsterPivotPos = monsterPivot.getCurrentPosition();
+        } else {
+            PIDF_PivotTo(monsterPivotPos);
+        }
+    }
+
+    public void PIDF_PivotTo(int targetPos) {
+            pivotController.setPID(p, i, d);
+            int currentPos = monsterPivot.getCurrentPosition();
+            //PID MATH
+            double pid = pivotController.calculate(currentPos, targetPos);
+            //feedforward math
+            double ff = Math.cos(Math.toRadians(targetPos/ticks_in_degree)) * f;
+            //power calculated
+            double power = pid + ff;
+            //setting motor power after all those calculations
+            monsterPivot.setPower(power*0.2);
+    }
+}
