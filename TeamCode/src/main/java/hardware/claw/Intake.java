@@ -87,21 +87,6 @@ public class Intake extends HardwareBase {
         clampOpen = true;
     }
 
-
-
-
-    public void bigPivot(boolean rB, boolean lB) {
-        if (rB) {
-            monsterPivot.setPower(0.35);
-            monsterPivotPos = monsterPivot.getCurrentPosition();
-        } else if (lB) {
-            monsterPivot.setPower(-0.35);
-            monsterPivotPos = monsterPivot.getCurrentPosition();
-        } else {
-            PIDF_PivotTo(monsterPivotPos);
-        }
-    }
-
     public void PIDF_PivotTo(int targetPos) {
             pivotController.setPID(p, i, d);
             int currentPos = monsterPivot.getCurrentPosition();
@@ -113,5 +98,16 @@ public class Intake extends HardwareBase {
             double power = pid + ff;
             //setting motor power after all those calculations
             monsterPivot.setPower(power*0.2);
+    }
+
+    public void intakeDown(boolean button, boolean button2) {
+        if (button && !button2) {
+            PIDF_PivotTo(-200);
+            openClaw();
+
+        } else if (button2 && !button) {
+            PIDF_PivotTo(-5);
+            closeClaw();
+        }
     }
 }
