@@ -53,7 +53,7 @@ public class IntoTheDeepTeleop extends OpMode {
         intake.clawWrist(gamepad1.b, gamepad1.x);
         intake.miniPivot(gamepad1.right_trigger, gamepad1.left_trigger);
         intake.clawClamp(gamepad1.a);
-        intake.bigPivot(gamepad1.right_bumper, gamepad1.left_bumper);
+        intake.intakeDown(gamepad1.right_bumper, gamepad1.left_bumper);
     }
 
     public void SlidesControls() {
