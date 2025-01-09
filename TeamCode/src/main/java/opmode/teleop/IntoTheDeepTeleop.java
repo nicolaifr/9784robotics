@@ -57,7 +57,7 @@ public class IntoTheDeepTeleop extends OpMode {
     }
 
     public void SlidesControls() {
-        slides.verticalSlidesControls(gamepad2.right_trigger, gamepad2.left_trigger);
+        slides.verticalSlidesControls(gamepad2.right_stick_button, gamepad2.left_stick_button);
         slides.horizSlidesControls(gamepad1.left_stick_button, gamepad1.right_stick_button);
     }
 

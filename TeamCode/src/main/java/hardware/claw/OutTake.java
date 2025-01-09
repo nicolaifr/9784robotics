@@ -41,13 +41,13 @@ public class OutTake extends HardwareBase {
         }
     }
     public void arm(boolean a, boolean b) {
-        if (b && armPos != 1) {
-            testServo.setPosition(armPos+= 0.001);
-            testServo1.setPosition(armPos += 0.001);
+        if (b) {
+            testServo.setPosition(armPos+= 0.003);
+            testServo1.setPosition(armPos += 0.003);
         }
-        if (a && armPos != 0) {
-            testServo.setPosition(armPos -= 0.001);
-            testServo1.setPosition(armPos -= 0.001);
+        if (a) {
+            testServo.setPosition(armPos -= 0.003);
+            testServo1.setPosition(armPos -= 0.003);
         }
     }
 

@@ -37,7 +37,7 @@ public class Intake extends HardwareBase {
 
         pivotController = new PIDController(p, i, d);
 
-        clawClamp = ahwMap.get(Servo.class, "intakeClamp");
+        clawClamp = ahwMap.servo.get("clamp");
         clawWrist = ahwMap.get(Servo.class, "intakeWrist");
         miniPivot = ahwMap.get(Servo.class, "intakePitch");
         monsterPivot = ahwMap.get(DcMotor.class, "pivotMotor");
@@ -83,7 +83,7 @@ public class Intake extends HardwareBase {
         clampOpen = false;
     }
     public void openClaw(){
-        clawClamp.setPosition(0.4);
+        clawClamp.setPosition(0);
         clampOpen = true;
     }
 
@@ -92,10 +92,10 @@ public class Intake extends HardwareBase {
 
     public void bigPivot(boolean rB, boolean lB) {
         if (rB) {
-            monsterPivot.setPower(0.4);
+            monsterPivot.setPower(0.35);
             monsterPivotPos = monsterPivot.getCurrentPosition();
         } else if (lB) {
-            monsterPivot.setPower(-0.4);
+            monsterPivot.setPower(-0.35);
             monsterPivotPos = monsterPivot.getCurrentPosition();
         } else {
             PIDF_PivotTo(monsterPivotPos);

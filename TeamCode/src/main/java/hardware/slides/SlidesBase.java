@@ -19,11 +19,11 @@ public class SlidesBase extends HardwareBase {
     int vertCurrentPos;
     int horizCurrentPos;
     //P,I,D in the PID controller watch KookyBotz Video for more info
-    public static double pH = 0, iH = 0, dH = 0.0001;
+    public static double pH = 0.07, iH = 0, dH = 0.001;
     public static double pV = 0.04, iV = 0, dV = 0.001;
     //feedforward
     public static double Vf = 0.001;
-    public static double Hf = 0.3;
+    public static double Hf = 0.2;
     //how many ticks in degree USING REV THROUGH BORE ENCODER
     private final double ticks_in_degree = (double) 8192/360;
 
@@ -44,16 +44,16 @@ public class SlidesBase extends HardwareBase {
         vertSlidesSecond.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    public void verticalSlidesControls(double rightTrigger, double leftTrigger) {
+    public void verticalSlidesControls(boolean rightTrigger, boolean leftTrigger) {
         //code that uses the pidf to do cool sigma stuff
         //reversing Y cuz im like pretty sure thats how it is
-        if (rightTrigger >= 0.25) {
+        if (rightTrigger) {
             vertSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             vertSlidesSecond.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             vertSlides.setPower(0.6);
             vertSlidesSecond.setPower(-0.6);
             vertCurrentPos = vertSlides.getCurrentPosition();
-        } else if (leftTrigger >= 0.25) {
+        } else if (leftTrigger) {
             vertSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             vertSlidesSecond.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             vertSlides.setPower(-0.6);
@@ -68,11 +68,11 @@ public class SlidesBase extends HardwareBase {
         //reversing Y cuz im like pretty sure thats how it is
         if (rightBumper) {
             horizSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            horizSlides.setPower(0.75);
+            horizSlides.setPower(-1);
             horizCurrentPos = horizSlides.getCurrentPosition();
         } else if (leftBumper) {
             horizSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            horizSlides.setPower(-0.75);
+            horizSlides.setPower(1);
             horizCurrentPos = horizSlides.getCurrentPosition();
         } else {
             PIDF_HorizTo(horizCurrentPos);
