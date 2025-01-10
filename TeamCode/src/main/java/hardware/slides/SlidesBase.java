@@ -27,6 +27,8 @@ public class SlidesBase extends HardwareBase {
     //how many ticks in degree USING REV THROUGH BORE ENCODER
     private final double ticks_in_degree = (double) 8192/360;
 
+    int vertTarget;
+
     @Override
     public void init(HardwareMap ahwMap, Telemetry t) {
         horizController = new PIDController(pH, iH, dH);
@@ -42,6 +44,8 @@ public class SlidesBase extends HardwareBase {
         vertSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         vertSlidesSecond.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         vertSlidesSecond.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        vertTarget = 0;
     }
 
     public void verticalSlidesControls(boolean rightTrigger, boolean leftTrigger) {
@@ -60,7 +64,7 @@ public class SlidesBase extends HardwareBase {
             vertSlidesSecond.setPower(-0.6);
             vertCurrentPos = vertSlides.getCurrentPosition();
         } else {
-            PIDF_VertTo(vertCurrentPos);
+            setVertTarget(vertCurrentPos);
         }
     }
     public void horizSlidesControls(boolean leftBumper, boolean rightBumper) {
@@ -75,16 +79,18 @@ public class SlidesBase extends HardwareBase {
             horizSlides.setPower(1);
             horizCurrentPos = horizSlides.getCurrentPosition();
         } else {
-            PIDF_HorizTo(horizCurrentPos);
+            horizSlides.setTargetPosition(horizCurrentPos);
+            horizSlides.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            horizSlides.setPower(0.2);
         }
     }
-    public void PIDF_VertTo(int vertTargetPos) {
+    public void PIDF_Vert() {
         vertController.setPID(pV, iV, dV);
         int vertCurrentPos = vertSlides.getCurrentPosition();
         //PID MATH
-        double pid = vertController.calculate(vertCurrentPos, vertTargetPos);
+        double pid = vertController.calculate(vertCurrentPos, vertTarget);
         //feedforward math
-        double ff = Math.cos(Math.toRadians(vertTargetPos/ticks_in_degree)) * Vf;
+        double ff = Math.cos(Math.toRadians(vertTarget/ticks_in_degree)) * Vf;
         //power calculated
         double power = pid + ff;
         //setting motor power after all those calculations
@@ -92,17 +98,7 @@ public class SlidesBase extends HardwareBase {
         vertSlidesSecond.setPower(power);
     }
 
-    public void PIDF_HorizTo(int horizTargetPos) {
-        //loop code when "PLAY/Triangle" is hit loops over again while opmode is active
-        horizController.setPID(pH, iH, dH);
-        int horizCurrentPos = horizSlides.getCurrentPosition();
-        //PID MATH
-        double pid = horizController.calculate(horizCurrentPos, horizTargetPos);
-        //feedforward math
-        double ff = Math.cos(Math.toRadians(horizTargetPos/ticks_in_degree)) * Hf;
-        //power calculated
-        double power = pid + ff;
-        //setting motor power after all those calculations
-        horizSlides.setPower(power);
+    public void setVertTarget(int newTarget) {
+        newTarget = vertTarget;
     }
 }

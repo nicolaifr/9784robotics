@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import hardware.claw.Intake;
+import hardware.claw.PIDF_Pivot;
 import hardware.drive.DriveTrainBase;
 import hardware.claw.OutTake;
 import hardware.slides.SlidesBase;
@@ -54,11 +55,13 @@ public class IntoTheDeepTeleop extends OpMode {
         intake.miniPivot(gamepad1.right_trigger, gamepad1.left_trigger);
         intake.clawClamp(gamepad1.a);
         intake.intakeDown(gamepad1.right_bumper, gamepad1.left_bumper);
+        intake.PIDF_Pivot();
     }
 
     public void SlidesControls() {
         slides.verticalSlidesControls(gamepad2.right_stick_button, gamepad2.left_stick_button);
         slides.horizSlidesControls(gamepad1.left_stick_button, gamepad1.right_stick_button);
+        slides.PIDF_Vert();
     }
 
     public void getTelemetry() {
