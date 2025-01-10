@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -11,7 +12,7 @@ import hardware.HardwareBase;
 
 public class Intake extends HardwareBase {
     private PIDController pivotController;
-    public static double p = 0.02, i = 0, d = 0.001;
+    public static double p = 0.008, i = 0, d = 0.001;
     public static double f = 0.1;
     private final double ticks_in_degree = ((double) 8192) /360;
 
@@ -96,9 +97,9 @@ public class Intake extends HardwareBase {
             //feedforward math
             double ff = Math.cos(Math.toRadians(pivotTarget/ticks_in_degree)) * f;
             //power calculated
-            double power = pid + ff;
+            double power = (pid + ff);
             //setting motor power after all those calculations
-            monsterPivot.setPower(power*0.2);
+            monsterPivot.setPower(Range.clip(power, -0.4, 0.6));
     }
 
     public void setPivotTarget(int newTarget) {
@@ -107,11 +108,11 @@ public class Intake extends HardwareBase {
 
     public void intakeDown(boolean button, boolean button2) {
         if (button && !button2) {
-            setPivotTarget(-200);
+            setPivotTarget(-266);
             miniPivot.setPosition(0.5);
 
         } else if (button2 && !button) {
-            setPivotTarget(-5);
+            setPivotTarget(-100);
             miniPivot.setPosition(0.5);
         }
     }

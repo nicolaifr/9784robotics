@@ -60,11 +60,14 @@ public class IntoTheDeepTeleop extends OpMode {
 
     public void SlidesControls() {
         slides.verticalSlidesControls(gamepad2.right_stick_button, gamepad2.left_stick_button);
-        slides.horizSlidesControls(gamepad1.left_stick_button, gamepad1.right_stick_button);
-        slides.PIDF_Vert();
+        slides.horizSlidesControls(gamepad1.right_stick_button, gamepad1.left_stick_button);
+        //slides.PIDF_Vert();
+        slides.PIDF_H();
     }
 
     public void getTelemetry() {
+        telemetry.addData("target", intake.monsterPivot.getTargetPosition());
+        telemetry.addData("curretn", intake.monsterPivot.getCurrentPosition());
         telemetry.update();
     }
 }
