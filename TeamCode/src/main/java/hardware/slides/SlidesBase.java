@@ -19,15 +19,16 @@ public class SlidesBase extends HardwareBase {
     int vertCurrentPos;
     int horizCurrentPos;
     //P,I,D in the PID controller watch KookyBotz Video for more info
-    public static double pH = 0.07, iH = 0, dH = 0.001;
+    public static double pH = 0.09, iH = 0, dH = 0.001;
     public static double pV = 0.04, iV = 0, dV = 0.001;
     //feedforward
     public static double Vf = 0.001;
     public static double Hf = 0.2;
     //how many ticks in degree USING REV THROUGH BORE ENCODER
-    private final double ticks_in_degree = (double) 8192/360;
+    private final double ticks_in_degree = (double) 8192 / 360;
 
     int vertTarget;
+    int horizTarget;
 
     @Override
     public void init(HardwareMap ahwMap, Telemetry t) {
@@ -46,6 +47,7 @@ public class SlidesBase extends HardwareBase {
         vertSlidesSecond.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         vertTarget = 0;
+        horizTarget = 0;
     }
 
     public void verticalSlidesControls(boolean rightTrigger, boolean leftTrigger) {
@@ -67,6 +69,7 @@ public class SlidesBase extends HardwareBase {
             setVertTarget(vertCurrentPos);
         }
     }
+
     public void horizSlidesControls(boolean leftBumper, boolean rightBumper) {
         //code that uses the pidf to do cool sigma stuff
         //reversing Y cuz im like pretty sure thats how it is
@@ -79,18 +82,18 @@ public class SlidesBase extends HardwareBase {
             horizSlides.setPower(1);
             horizCurrentPos = horizSlides.getCurrentPosition();
         } else {
-            horizSlides.setTargetPosition(horizCurrentPos);
-            horizSlides.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            horizSlides.setPower(0.2);
+            setHorizTarget(horizCurrentPos);
+            //yes guys we fixed it!
         }
     }
+
     public void PIDF_Vert() {
         vertController.setPID(pV, iV, dV);
         int vertCurrentPos = vertSlides.getCurrentPosition();
         //PID MATH
         double pid = vertController.calculate(vertCurrentPos, vertTarget);
         //feedforward math
-        double ff = Math.cos(Math.toRadians(vertTarget/ticks_in_degree)) * Vf;
+        double ff = Math.cos(Math.toRadians(vertTarget / ticks_in_degree)) * Vf;
         //power calculated
         double power = pid + ff;
         //setting motor power after all those calculations
@@ -98,7 +101,24 @@ public class SlidesBase extends HardwareBase {
         vertSlidesSecond.setPower(power);
     }
 
+    public void PIDF_H() {
+        horizController.setPID(pH, iH, dH);
+        int vertCurrentPos = horizSlides.getCurrentPosition();
+        //PID MATH
+        double pid = horizController.calculate(vertCurrentPos, vertTarget);
+        //feedforward math
+        double ff = Math.cos(Math.toRadians(vertTarget / ticks_in_degree)) * Hf;
+        //power calculated
+        double power = pid + ff;
+        //setting motor power after all those calculations
+        horizSlides.setPower(power);
+    }
+
     public void setVertTarget(int newTarget) {
         newTarget = vertTarget;
+    }
+
+    public void setHorizTarget(int newTarget) {
+        newTarget = horizTarget;
     }
 }

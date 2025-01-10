@@ -10,6 +10,7 @@ public class telemetryEncoders extends OpMode {
     private DcMotor rightBack;
     private DcMotor leftFront;
     private DcMotor rightFront;
+    private DcMotor pivot;
 
     @Override
     public void init() {
@@ -17,6 +18,7 @@ public class telemetryEncoders extends OpMode {
         rightBack = hardwareMap.get(DcMotor.class, "rightBackWheel");
         leftFront = hardwareMap.get(DcMotor.class, "leftFrontWheel");
         rightFront = hardwareMap.get(DcMotor.class, "rightFrontWheel");
+        pivot = hardwareMap.get(DcMotor.class, "pivotMotor");
 
         leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -26,6 +28,9 @@ public class telemetryEncoders extends OpMode {
         leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        pivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        pivot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     @Override
@@ -34,6 +39,7 @@ public class telemetryEncoders extends OpMode {
         telemetry.addData("rightBack pos", rightBack.getCurrentPosition());
         telemetry.addData("leftFront pos", leftFront.getCurrentPosition());
         telemetry.addData("rightFront pos", rightFront.getCurrentPosition());
+        telemetry.addData("pivot pos", pivot.getCurrentPosition());
         telemetry.update();
     }
 }
