@@ -15,7 +15,7 @@ public class Intake extends HardwareBase {
     public static double f = 0.1;
     private final double ticks_in_degree = ((double) 8192) /360;
 
-
+    int pivotTarget;
 
     public Servo clawClamp;
     public Servo clawWrist;
@@ -48,6 +48,7 @@ public class Intake extends HardwareBase {
         clampOpen = false;
         pivotPos = 0;
         wristPos = 0;
+        pivotTarget = 0;
     }
 
     public void clawWrist(boolean b, boolean x) {
@@ -87,27 +88,31 @@ public class Intake extends HardwareBase {
         clampOpen = true;
     }
 
-    public void PIDF_PivotTo(int targetPos) {
+    public void PIDF_Pivot() {
             pivotController.setPID(p, i, d);
             int currentPos = monsterPivot.getCurrentPosition();
             //PID MATH
-            double pid = pivotController.calculate(currentPos, targetPos);
+            double pid = pivotController.calculate(currentPos, pivotTarget);
             //feedforward math
-            double ff = Math.cos(Math.toRadians(targetPos/ticks_in_degree)) * f;
+            double ff = Math.cos(Math.toRadians(pivotTarget/ticks_in_degree)) * f;
             //power calculated
             double power = pid + ff;
             //setting motor power after all those calculations
             monsterPivot.setPower(power*0.2);
     }
 
+    public void setPivotTarget(int newTarget) {
+        pivotTarget = newTarget;
+    }
+
     public void intakeDown(boolean button, boolean button2) {
         if (button && !button2) {
-            PIDF_PivotTo(-200);
-            openClaw();
+            setPivotTarget(-200);
+            miniPivot.setPosition(0.5);
 
         } else if (button2 && !button) {
-            PIDF_PivotTo(-5);
-            closeClaw();
+            setPivotTarget(-5);
+            miniPivot.setPosition(0.5);
         }
     }
 }
