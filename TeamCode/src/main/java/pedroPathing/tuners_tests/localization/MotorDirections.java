@@ -40,10 +40,10 @@ public class MotorDirections extends OpMode {
     public void init() {
         Constants.setConstants(FConstants.class, LConstants.class);
 
-        leftFront = hardwareMap.get(DcMotorEx.class, leftFrontMotorName);
-        leftRear = hardwareMap.get(DcMotorEx.class, leftRearMotorName);
-        rightRear = hardwareMap.get(DcMotorEx.class, rightRearMotorName);
-        rightFront = hardwareMap.get(DcMotorEx.class, rightFrontMotorName);
+        leftFront = hardwareMap.get(DcMotorEx.class, "leftFrontWheel");
+        leftRear = hardwareMap.get(DcMotorEx.class, "leftBackWheel");
+        rightRear = hardwareMap.get(DcMotorEx.class, "rightBackWheel");
+        rightFront = hardwareMap.get(DcMotorEx.class, "rightFrontWheel");
         leftFront.setDirection(leftFrontMotorDirection);
         leftRear.setDirection(leftRearMotorDirection);
         rightFront.setDirection(rightFrontMotorDirection);
