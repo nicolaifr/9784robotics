@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import hardware.arm.ArmBase;
 import hardware.claw.Intake;
 import hardware.claw.PIDF_Pivot;
 import hardware.drive.DriveTrainBase;
@@ -19,6 +20,7 @@ public class IntoTheDeepTeleop extends OpMode {
     OutTake outtake;
     SlidesBase slides;
     Intake intake;
+    ArmBase arm;
 
     int clawState;
     @Override
@@ -27,6 +29,7 @@ public class IntoTheDeepTeleop extends OpMode {
         outtake = new OutTake();
         intake = new Intake();
         slides = new SlidesBase();
+        arm = new ArmBase();
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
@@ -34,6 +37,7 @@ public class IntoTheDeepTeleop extends OpMode {
         outtake.init(hardwareMap, telemetry);
         intake.init(hardwareMap, telemetry);
         slides.init(hardwareMap, telemetry);
+        arm.init(hardwareMap, telemetry);
     }
 
     @Override
@@ -45,9 +49,8 @@ public class IntoTheDeepTeleop extends OpMode {
         SlidesControls();
     }
     public void OutTakeControls(){
-        outtake.clamp(gamepad2.right_bumper, gamepad2.left_bumper);
-        outtake.arm(gamepad2.a, gamepad2.b);
-        outtake.wrist(gamepad2.right_trigger, gamepad2.left_trigger);
+        outtake.clamp(gamepad2.a, gamepad2.b);
+        arm.arm(gamepad2.right_trigger, gamepad2.left_trigger, gamepad2.right_bumper, gamepad2.left_bumper);
     }
 
     public void IntakeControls() {
