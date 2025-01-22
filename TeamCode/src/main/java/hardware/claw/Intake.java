@@ -1,18 +1,20 @@
 package hardware.claw;
 
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import hardware.HardwareBase;
 
 public class Intake extends HardwareBase {
     private PIDController pivotController;
-    public static double p = 0.008, i = 0, d = 0.001;
+    public static double p = 0.015, i = 0, d = 0.001;
     public static double f = 0.1;
     private final double ticks_in_degree = ((double) 8192) /360;
 
@@ -22,6 +24,7 @@ public class Intake extends HardwareBase {
     public Servo clawWrist;
     public DcMotor monsterPivot;
     public Servo miniPivot;
+    public ColorRangeSensor colorRangeSensor;
 
     public double clampPos;
     public double wristPos;
@@ -42,6 +45,7 @@ public class Intake extends HardwareBase {
         clawWrist = ahwMap.get(Servo.class, "intakeWrist");
         miniPivot = ahwMap.get(Servo.class, "intakePitch");
         monsterPivot = ahwMap.get(DcMotor.class, "pivotMotor");
+        colorRangeSensor = ahwMap.get(ColorRangeSensor.class, "colorRangeSensor");
 
         monsterPivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         monsterPivot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -73,15 +77,32 @@ public class Intake extends HardwareBase {
     }
 
     public void clawClamp(boolean a) {
+//        if (clampOpen) {
+//            if (colorRangeSensor.getDistance(DistanceUnit.INCH) < 0.5 && (colorRangeSensor.red() > 200 || colorRangeSensor.blue() > 200)
+//            ) {
+//                clampOpen = false;
+//                closeClaw();
+//            }
+//        } else {
+//            if (a) {
+//                openClaw();
+//            } else {
+//                closeClaw();
+//            }
+//            clampOpen = !(colorRangeSensor.getDistance(DistanceUnit.INCH) < 0.5 && (colorRangeSensor.red() > 200 || colorRangeSensor.blue() > 200));
+//
+//        }
         if (a) {
-            openClaw();
-        } else {
             closeClaw();
+            clampOpen = false;
+        } else {
+            openClaw();
+            clampOpen = true;
         }
     }
 
     public void closeClaw(){
-        clawClamp.setPosition(1);
+        clawClamp.setPosition(0.82);
         clampOpen = false;
     }
     public void openClaw(){

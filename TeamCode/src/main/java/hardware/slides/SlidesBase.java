@@ -2,22 +2,23 @@ package hardware.slides;
 
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import hardware.HardwareBase;
 
 public class SlidesBase extends HardwareBase {
-    public DcMotor vertSlides;
-    public DcMotor horizSlides;
-    public DcMotor vertSlidesSecond;
+    public DcMotorEx vertSlides;
+    public DcMotorEx horizSlides;
+    public DcMotorEx vertSlidesSecond;
 
 
     //PID rotate stuff
     private PIDController horizController;
     private PIDController vertController;
     int vertCurrentPos;
-    int horizCurrentPos;
+    public int horizCurrentPos;
     //P,I,D in the PID controller watch KookyBotz Video for more info
     public static double pH = 0.09, iH = 0, dH = 0.001;
     public static double pV = 0.04, iV = 0, dV = 0.001;
@@ -35,16 +36,16 @@ public class SlidesBase extends HardwareBase {
         horizController = new PIDController(pH, iH, dH);
         vertController = new PIDController(pV, iV, dV);
 
-        horizSlides = ahwMap.get(DcMotor.class, "horizSlides");
-        vertSlides = ahwMap.get(DcMotor.class, "vertSlides");
-        vertSlidesSecond = ahwMap.get(DcMotor.class, "vertSlidesSecond");
+        horizSlides = ahwMap.get(DcMotorEx.class, "horizSlides");
+        vertSlides = ahwMap.get(DcMotorEx.class, "vertSlides");
+        vertSlidesSecond = ahwMap.get(DcMotorEx.class, "vertSlidesSecond");
 
-        horizSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        horizSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        vertSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        vertSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        vertSlidesSecond.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        vertSlidesSecond.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        horizSlides.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        horizSlides.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        vertSlides.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        vertSlides.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        vertSlidesSecond.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        vertSlidesSecond.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
         vertTarget = 0;
         horizTarget = 0;
@@ -70,18 +71,19 @@ public class SlidesBase extends HardwareBase {
         }
     }
 
-    public void horizSlidesControls(boolean leftBumper, boolean rightBumper) {
+    public void horizSlidesControls(boolean leftT, boolean rightT) {
         //code that uses the pidf to do cool sigma stuff
         //reversing Y cuz im like pretty sure thats how it is
-        if (rightBumper) {
-            horizSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            horizSlides.setPower(-1);
-            horizCurrentPos = horizSlides.getCurrentPosition();
-        } else if (leftBumper) {
-            horizSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        if (rightT && horizSlides.getCurrentPosition() <= 10) {
+            horizSlides.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
             horizSlides.setPower(1);
             horizCurrentPos = horizSlides.getCurrentPosition();
+        } else if (leftT && horizSlides.getCurrentPosition() >= -55) {
+            horizSlides.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+            horizSlides.setPower(-1);
+            horizCurrentPos = horizSlides.getCurrentPosition();
         } else {
+            horizSlides.setPower(0);
             setHorizTarget(horizCurrentPos);
             //yes guys we fixed it!
         }
@@ -103,11 +105,11 @@ public class SlidesBase extends HardwareBase {
 
     public void PIDF_H() {
         horizController.setPID(pH, iH, dH);
-        int vertCurrentPos = horizSlides.getCurrentPosition();
+        int horizCurrentPos = horizSlides.getCurrentPosition();
         //PID MATH
-        double pid = horizController.calculate(vertCurrentPos, vertTarget);
+        double pid = horizController.calculate(horizCurrentPos, horizTarget);
         //feedforward math
-        double ff = Math.cos(Math.toRadians(vertTarget / ticks_in_degree)) * Hf;
+        double ff = Math.cos(Math.toRadians(horizTarget / ticks_in_degree)) * Hf;
         //power calculated
         double power = pid + ff;
         //setting motor power after all those calculations
@@ -115,10 +117,10 @@ public class SlidesBase extends HardwareBase {
     }
 
     public void setVertTarget(int newTarget) {
-        newTarget = vertTarget;
+        vertTarget = newTarget;
     }
 
     public void setHorizTarget(int newTarget) {
-        newTarget = horizTarget;
+        horizTarget = newTarget;
     }
 }

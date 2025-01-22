@@ -4,25 +4,23 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
 @Config
 @TeleOp
-public class PIDF_Arm extends OpMode {
+public class PIDF_ArmLeftRight extends OpMode {
 
-    private PIDController rotateController;
-    private PIDController wristController;
+    private PIDController leftController;
+    private PIDController rightController;
     //P,I,D in the PID controller watch KookyBotz Video for more info
-    public static double pR = 0.0007, iR = 0, dR = 0.00001;
-    public static double pE = 0.000, iE = 0, dE = 0.0001;
+    public static double pR = 0.0007, iR = 0, dR = 0.00002;
     //feedforward
-    public static double f = 0.15;
+    public static double f = -0.05;
     //arm target position
     public static int rotateTarget = 0;
     public static int wristTarget = 0;
@@ -36,8 +34,9 @@ public class PIDF_Arm extends OpMode {
     @Override
     public void init() {
         //initialization code when "INIT" is pressed
-        rotateController = new PIDController(pR, iR, dR);
-        wristController = new PIDController(pE, iE, dE);
+
+        leftController = new PIDController(pR, iR, dR);
+        rightController = new PIDController(pR, iR, dR);
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
@@ -57,40 +56,46 @@ public class PIDF_Arm extends OpMode {
     @Override
     public void loop() {
         //loop code when "PLAY/Triangle" is hit loops over again while opmode is active
-        rotateController.setPID(pR, iR, dR);
-        wristController.setPID(pE, iE, dE);
+        leftController.setPID(pR, iR, dR);
+        rightController.setPID(pR, iR, dR);
 
-        int rotatePos = (armRotateLeftEncoder.getCurrentPosition() - armRotateRightEncoder.getCurrentPosition()) / 2;
+        int leftPos = armRotateLeftEncoder.getCurrentPosition();
+        double leftTarget = rotateTarget - (double) wristTarget /2;
         //PID MATH
-        double rotatePID = rotateController.calculate(rotatePos, rotateTarget);
+        double leftPID = leftController.calculate(leftPos, leftTarget);
         //feedforward math
-        double rotateFF = Math.cos(Math.toRadians(rotateTarget/ticks_in_degree)) * f;
+        double leftFF = Math.cos(Math.toRadians(leftTarget/ticks_in_degree)) * f;
         //power calculated
-        double rotatePower = rotatePID + rotateFF;
+        double leftPower = leftPID + leftFF;
 
-        int wristPos = armRotateLeftEncoder.getCurrentPosition() + armRotateRightEncoder.getCurrentPosition();
+        int rightPos = -armRotateRightEncoder.getCurrentPosition();
+        double rightTarget = rotateTarget + (double) wristTarget /2;
         //PID MATH
-        double wristPID = wristController.calculate(wristPos, wristTarget);
+        double rightPID = rightController.calculate(rightPos, rightTarget);
         //feedforward math
-        double wristFF = Math.cos(Math.toRadians(wristTarget/ticks_in_degree)) * f;
+        double rightFF = Math.cos(Math.toRadians(rightTarget/ticks_in_degree)) * f;
         //power calculated
-        double wristPower = wristPID + wristFF;
+        double rightPower = rightPID + rightFF;
 
-        double leftPower = Range.clip(rotatePower+wristPower, -1, 1);
-        double rightPower = Range.clip(rotatePower,-wristPower -1, 1);
+        leftPower = Range.clip(leftPower, -1, 1);
+        rightPower = Range.clip(rightPower, -1, 1);
         //setting motor power after all those calculations
         armRotateLeft.setPower(leftPower);
         armRotateRight.setPower(rightPower);
         //telemetry for tuning
 
-        telemetry.addData("right pos", armRotateRightEncoder.getCurrentPosition());
-        telemetry.addData("left pos", armRotateLeftEncoder.getCurrentPosition());
-        telemetry.addData("right speed", rightPower);
-        telemetry.addData("left speed", leftPower);
-        telemetry.addData("wrist", wristPower);
+        int rotatePos = (leftPos+rightPos)/2;
+        int wristPos = (leftPos-rightPos);
+
+        telemetry.addData("right pos", rightPos);
+        telemetry.addData("left pos", leftPos);
+        telemetry.addData("right target", rightTarget);
+        telemetry.addData("left target", leftTarget);
+        telemetry.addData("right power", rightPower);
+        telemetry.addData("left power", leftPower);
         telemetry.addData("rotate Pos", rotatePos);
         telemetry.addData("rotate target", rotateTarget);
-        telemetry.addData("wrist Pos", wristPos);
+        telemetry.addData("wrist pos", wristPos);
         telemetry.addData("wrist target", wristTarget);
         telemetry.update();
     }

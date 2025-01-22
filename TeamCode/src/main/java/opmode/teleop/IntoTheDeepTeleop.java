@@ -49,28 +49,35 @@ public class IntoTheDeepTeleop extends OpMode {
         SlidesControls();
     }
     public void OutTakeControls(){
-        outtake.clamp(gamepad2.a, gamepad2.b);
+        outtake.clamp(gamepad2.dpad_up, gamepad2.dpad_down);
+        outtake.wrist(gamepad2.right_stick_x);
         arm.arm(gamepad2.right_trigger, gamepad2.left_trigger, gamepad2.right_bumper, gamepad2.left_bumper);
     }
 
     public void IntakeControls() {
-        intake.clawWrist(gamepad1.b, gamepad1.x);
-        intake.miniPivot(gamepad1.right_trigger, gamepad1.left_trigger);
-        intake.clawClamp(gamepad1.a);
-        intake.intakeDown(gamepad1.right_bumper, gamepad1.left_bumper);
+        intake.clawWrist(gamepad2.b, gamepad2.x);
+        intake.clawClamp(gamepad2.a);
+//        intake.miniPivot(gamepad1.right_trigger, gamepad1.left_trigger);
+        intake.intakeDown(gamepad2.dpad_right, gamepad2.dpad_left);
         intake.PIDF_Pivot();
     }
 
     public void SlidesControls() {
-        slides.verticalSlidesControls(gamepad2.right_stick_button, gamepad2.left_stick_button);
-        slides.horizSlidesControls(gamepad1.right_stick_button, gamepad1.left_stick_button);
+//        slides.verticalSlidesControls(gamepad2.right_stick_button, gamepad2.left_stick_button);
+        slides.horizSlidesControls(gamepad2.right_stick_button, gamepad2.left_stick_button);
         //slides.PIDF_Vert();
-        slides.PIDF_H();
+//        slides.PIDF_H();
     }
 
     public void getTelemetry() {
         telemetry.addData("target", intake.monsterPivot.getTargetPosition());
         telemetry.addData("curretn", intake.monsterPivot.getCurrentPosition());
+        telemetry.addData("horiz pos", slides.horizSlides.getCurrentPosition());
+        telemetry.addData("horiz power", slides.horizSlides.getPower());
+        telemetry.addData("left front", drive.leftFront.getPower());
+        telemetry.addData("right front", drive.rightFront.getPower());
+        telemetry.addData("left position", arm.armRotateLeftEncoder.getCurrentPosition());
+        telemetry.addData("right power", arm.armRotateRightEncoder.getCurrentPosition());
         telemetry.update();
     }
 }

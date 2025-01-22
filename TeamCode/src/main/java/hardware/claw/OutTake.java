@@ -23,8 +23,6 @@ public class OutTake extends HardwareBase {
     @Override
     public void init(HardwareMap ahwMap, Telemetry t) {
         super.init(ahwMap, t);
-        testServo = ahwMap.get(Servo.class, "ArmLeft");
-        testServo1 = ahwMap.get(Servo.class, "ArmRight");
         wrist = ahwMap.get(Servo.class, "clawClamp");
         clamp = ahwMap.get(Servo.class, "clawXRotate");
 
@@ -34,10 +32,10 @@ public class OutTake extends HardwareBase {
         clampClosed = false;
     }
     public void clamp(boolean rb, boolean lb){
-        if(rb) {
-            clamp.setPosition(1);
+        if (rb) {
+            clamp.setPosition(0.9);
         } else if (lb) {
-            clamp.setPosition(0);
+            clamp.setPosition(0.1);
         }
     }
     public void arm(boolean a, boolean b) {
@@ -51,11 +49,13 @@ public class OutTake extends HardwareBase {
         }
     }
 
-    public void wrist(double rt, double lt) {
-        if(rt >= 0.5 && wristPos != 1) {
-            wrist.setPosition(wristPos += 0.003);
-        } else if (lt >= 0.5 && wristPos != 0) {
-            wrist.setPosition(wristPos -= 0.003);
+    public void wrist(double rt) {
+        if(rt >= 0.1 && wristPos <= 1) {
+            wristPos += 0.003;
+            wrist.setPosition(wristPos);
+        } else if (rt <= -0.1 && wristPos >= 0) {
+            wristPos -= 0.003;
+            wrist.setPosition(wristPos);
         }
     }
 }
