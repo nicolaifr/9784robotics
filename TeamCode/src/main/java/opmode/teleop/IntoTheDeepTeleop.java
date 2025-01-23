@@ -25,18 +25,20 @@ public class IntoTheDeepTeleop extends OpMode {
     int clawState;
     @Override
     public void init() {
-        drive = new DriveTrainBase();
+
         outtake = new OutTake();
         intake = new Intake();
         slides = new SlidesBase();
         arm = new ArmBase();
+        drive = new DriveTrainBase();
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        drive.init(hardwareMap, telemetry);
+
         outtake.init(hardwareMap, telemetry);
         intake.init(hardwareMap, telemetry);
         slides.init(hardwareMap, telemetry);
+        drive.init(hardwareMap, telemetry);
         arm.init(hardwareMap, telemetry);
     }
 
@@ -74,10 +76,6 @@ public class IntoTheDeepTeleop extends OpMode {
         telemetry.addData("curretn", intake.monsterPivot.getCurrentPosition());
         telemetry.addData("horiz pos", slides.horizSlides.getCurrentPosition());
         telemetry.addData("horiz power", slides.horizSlides.getPower());
-        telemetry.addData("left front", drive.leftFront.getPower());
-        telemetry.addData("right front", drive.rightFront.getPower());
-        telemetry.addData("left position", arm.armRotateLeftEncoder.getCurrentPosition());
-        telemetry.addData("right power", arm.armRotateRightEncoder.getCurrentPosition());
         telemetry.update();
     }
 }

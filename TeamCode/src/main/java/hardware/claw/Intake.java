@@ -23,7 +23,6 @@ public class Intake extends HardwareBase {
     public Servo clawClamp;
     public Servo clawWrist;
     public DcMotor monsterPivot;
-    public Servo miniPivot;
     public ColorRangeSensor colorRangeSensor;
 
     public double clampPos;
@@ -43,7 +42,6 @@ public class Intake extends HardwareBase {
 
         clawClamp = ahwMap.servo.get("clamp");
         clawWrist = ahwMap.get(Servo.class, "intakeWrist");
-        miniPivot = ahwMap.get(Servo.class, "intakePitch");
         monsterPivot = ahwMap.get(DcMotor.class, "pivotMotor");
         colorRangeSensor = ahwMap.get(ColorRangeSensor.class, "colorRangeSensor");
 
@@ -63,16 +61,6 @@ public class Intake extends HardwareBase {
         } else if (x && wristPos != 0){
             wristPos -= 0.03;
             clawWrist.setPosition(wristPos);
-        }
-    }
-
-    public void miniPivot(double rT, double lT) {
-        if (rT >= 0.5 && pivotPos != 1) {
-            pivotPos += 0.03;
-            miniPivot.setPosition(pivotPos);
-        } else if (lT >= 0.5 && pivotPos != 0) {
-            pivotPos -= 0.03;
-            miniPivot.setPosition(pivotPos);
         }
     }
 
@@ -102,11 +90,11 @@ public class Intake extends HardwareBase {
     }
 
     public void closeClaw(){
-        clawClamp.setPosition(0.82);
+        clawClamp.setPosition(0.3);
         clampOpen = false;
     }
     public void openClaw(){
-        clawClamp.setPosition(0);
+        clawClamp.setPosition(0.82);
         clampOpen = true;
     }
 
@@ -130,11 +118,9 @@ public class Intake extends HardwareBase {
     public void intakeDown(boolean button, boolean button2) {
         if (button && !button2) {
             setPivotTarget(-266);
-            miniPivot.setPosition(0.5);
 
         } else if (button2 && !button) {
             setPivotTarget(-100);
-            miniPivot.setPosition(0.5);
         }
     }
 }

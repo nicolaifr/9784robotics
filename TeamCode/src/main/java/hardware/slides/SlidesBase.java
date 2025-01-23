@@ -41,7 +41,6 @@ public class SlidesBase extends HardwareBase {
         vertSlidesSecond = ahwMap.get(DcMotorEx.class, "vertSlidesSecond");
 
         horizSlides.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        horizSlides.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         vertSlides.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         vertSlides.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         vertSlidesSecond.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -74,17 +73,14 @@ public class SlidesBase extends HardwareBase {
     public void horizSlidesControls(boolean leftT, boolean rightT) {
         //code that uses the pidf to do cool sigma stuff
         //reversing Y cuz im like pretty sure thats how it is
-        if (rightT && horizSlides.getCurrentPosition() <= 10) {
-            horizSlides.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        if (rightT) {
+            horizSlides.setTargetPosition(10);
+            horizSlides.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             horizSlides.setPower(1);
-            horizCurrentPos = horizSlides.getCurrentPosition();
-        } else if (leftT && horizSlides.getCurrentPosition() >= -55) {
-            horizSlides.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        } else if (leftT) {
+            horizSlides.setTargetPosition(-200);
+            horizSlides.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             horizSlides.setPower(-1);
-            horizCurrentPos = horizSlides.getCurrentPosition();
-        } else {
-            horizSlides.setPower(0);
-            setHorizTarget(horizCurrentPos);
             //yes guys we fixed it!
         }
     }

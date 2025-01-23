@@ -24,23 +24,24 @@ public class ArmBase extends HardwareBase {
     public int wristPos;
 
 //PID rotate stuff
-    private PIDController rotateController;
-    private PIDController wristController;
+    private PIDController leftController;
+    private PIDController rightController;
     //P,I,D in the PID controller watch KookyBotz Video for more info
-    public static double pR = 0.0007, iR = 0, dR = 0.00001;
-    public static double pE = 0.008, iE = 0, dE = 0.0001;
+    public static double pR = 0.0007, iR = 0, dR = 0.00002;
     //feedforward
-    public static double f = 0.1;
+    public static double f = -0.05;
     //how many ticks in degree USING REV THROUGH BORE ENCODER
     private final double ticks_in_degree = (double) 8192/360;
 
     @Override
     public void init(HardwareMap ahwMap, Telemetry t) {
-        rotateController = new PIDController(pR, iR, dR);
-        wristController = new PIDController(pE, iE, dE);
+        super.init(ahwMap, t);
 
-        rotateController.setPID(pR, iR, dR);
-        wristController.setPID(pE, iE, dE);
+        rightController = new PIDController(pR, iR, dR);
+        leftController = new PIDController(pR, iR, dR);
+
+        rightController.setPID(pR, iR, dR);
+        leftController.setPID(pR, iR, dR);
 
         armRotateLeft = ahwMap.get(CRServo.class, "ArmLeft");
         armRotateRight = ahwMap.get(CRServo.class, "ArmRight");
@@ -50,6 +51,9 @@ public class ArmBase extends HardwareBase {
 
         armRotateLeftEncoder.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         armRotateRightEncoder.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        armRotateLeftEncoder.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        armRotateRightEncoder.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+
     }
 
     public void arm(double rightTrigger, double leftTrigger, boolean rightBumper, boolean leftBumper) {
@@ -57,45 +61,57 @@ public class ArmBase extends HardwareBase {
         if (rightTrigger >= 0.9) {
             armRotateLeft.setPower(0.2);
             armRotateRight.setPower(0.2);
-            rotatePos = (armRotateLeftEncoder.getCurrentPosition() - armRotateRightEncoder.getCurrentPosition()) / 2;
+            rotatePos = (armRotateLeftEncoder.getCurrentPosition() + armRotateRightEncoder.getCurrentPosition()) / 2;
         } else if (leftTrigger >= 0.9) {
             armRotateLeft.setPower(-0.2);
             armRotateRight.setPower(-0.2);
-            rotatePos = (armRotateLeftEncoder.getCurrentPosition() - armRotateRightEncoder.getCurrentPosition()) / 2;
+            rotatePos = (armRotateLeftEncoder.getCurrentPosition() + armRotateRightEncoder.getCurrentPosition()) / 2;
         } else if (rightBumper) {
             armRotateLeft.setPower(0.1);
             armRotateRight.setPower(-0.1);
-            wristPos = armRotateLeftEncoder.getCurrentPosition() + armRotateRightEncoder.getCurrentPosition();
+            wristPos = armRotateLeftEncoder.getCurrentPosition() - armRotateRightEncoder.getCurrentPosition();
         } else if (leftBumper) {
             armRotateLeft.setPower(-0.1);
             armRotateRight.setPower(0.1);
-            wristPos = armRotateLeftEncoder.getCurrentPosition() + armRotateRightEncoder.getCurrentPosition();
+            wristPos = armRotateLeftEncoder.getCurrentPosition() - armRotateRightEncoder.getCurrentPosition();
         } else {
             PIDFrotateTo(rotatePos, wristPos);
         }
     }
-    public void PIDFrotateTo(int rotateHoldPos, int wristHoldPos) {
+    public void PIDFrotateTo(int rotateTarget, int wristTarget) {
+        leftController.setPID(pR, iR, dR);
+        rightController.setPID(pR, iR, dR);
 
-        int armPos = (armRotateLeftEncoder.getCurrentPosition() - armRotateRightEncoder.getCurrentPosition()) / 2;
+        int leftPos = -armRotateLeftEncoder.getCurrentPosition();
+        double leftTarget = rotateTarget - (double) wristTarget /2;
         //PID MATH
-        double rotatePID = rotateController.calculate(armPos, rotateHoldPos);
+        double leftPID = leftController.calculate(leftPos, leftTarget);
         //feedforward math
-        double rotateFF = Math.cos(Math.toRadians(rotateHoldPos/ticks_in_degree)) * f;
+        double leftFF = Math.cos(Math.toRadians(leftTarget/ticks_in_degree)) * f;
         //power calculated
-        double rotatePower = rotatePID + rotateFF;
+        double leftPower = Range.clip(leftPID + leftFF, -1, 1);
 
-        int wristPos = armRotateLeftEncoder.getCurrentPosition() - armRotateRightEncoder.getCurrentPosition();
+        int rightPos = -armRotateRightEncoder.getCurrentPosition();
+        double rightTarget = rotateTarget + (double) wristTarget / 2;
         //PID MATH
-        double wristPID = wristController.calculate(wristPos, wristHoldPos);
+        double rightPID = rightController.calculate(rightPos, rightTarget);
         //feedforward math
-        double wristFF = Math.cos(Math.toRadians(wristHoldPos/ticks_in_degree)) * f;
+        double rightFF = Math.cos(Math.toRadians(rightTarget/ticks_in_degree)) * f;
         //power calculated
-        double wristPower = wristPID + wristFF;
+        double rightPower = Range.clip(rightPID + rightFF, -1, 1);
 
-        double leftPower = Range.clip(rotatePower, -1, 1);
-        double rightPower = Range.clip(rotatePower, -1, 1);
         //setting motor power after all those calculations
-        armRotateLeft.setPower(leftPower + wristPower);
-        armRotateRight.setPower(rightPower - wristPower);
+        armRotateLeft.setPower(leftPower);
+        armRotateRight.setPower(rightPower);
+        //telemetry for tuning
+
+//        int rotatePos = (leftPos+rightPos)/2;
+//        int wristPos = (leftPos-rightPos);
+//        telemetry.addData("right pos", rightPos);
+//        telemetry.addData("left pos", leftPos);
+//        telemetry.addData("right target", rightTarget);
+//        telemetry.addData("left target", leftTarget);
+//        telemetry.addData("right power", rightPower);
+//        telemetry.addData("left power", leftPower);
     }
 }

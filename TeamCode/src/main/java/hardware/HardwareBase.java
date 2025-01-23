@@ -9,7 +9,7 @@ public class HardwareBase
 
     HardwareMap hwMap;
 
-    Telemetry telemetry = null;
+    public Telemetry telemetry = null;
 
     String hardwareName;
 
