@@ -38,23 +38,13 @@ public class OutTake extends HardwareBase {
             clamp.setPosition(0.3);
         }
     }
-    public void arm(boolean a, boolean b) {
-        if (b) {
-            testServo.setPosition(armPos+= 0.003);
-            testServo1.setPosition(armPos += 0.003);
-        }
-        if (a) {
-            testServo.setPosition(armPos -= 0.003);
-            testServo1.setPosition(armPos -= 0.003);
-        }
-    }
 
     public void wrist(double rt) {
-        if(rt >= 0.1 && wristPos <= 1) {
-            wristPos += 0.003;
+        if(rt >= 0.9 && wristPos <= 1) {
+            wristPos += 0.01;
             wrist.setPosition(wristPos);
-        } else if (rt <= -0.1 && wristPos >= 0) {
-            wristPos -= 0.003;
+        } else if (rt <= -0.9 && wristPos >= -1) {
+            wristPos -= 0.01;
             wrist.setPosition(wristPos);
         }
     }

@@ -27,7 +27,7 @@ public class ArmBase extends HardwareBase {
     private PIDController leftController;
     private PIDController rightController;
     //P,I,D in the PID controller watch KookyBotz Video for more info
-    public static double pR = 0.0007, iR = 0, dR = 0.00002;
+    public static double pR = 0.0004, iR = 0, dR = 0.00002;
     //feedforward
     public static double f = -0.05;
     //how many ticks in degree USING REV THROUGH BORE ENCODER
@@ -61,19 +61,19 @@ public class ArmBase extends HardwareBase {
         if (rightTrigger >= 0.9) {
             armRotateLeft.setPower(0.2);
             armRotateRight.setPower(0.2);
-            rotatePos = (armRotateLeftEncoder.getCurrentPosition() + armRotateRightEncoder.getCurrentPosition()) / 2;
+            rotatePos = (-armRotateLeftEncoder.getCurrentPosition() - armRotateRightEncoder.getCurrentPosition()) / 2;
         } else if (leftTrigger >= 0.9) {
             armRotateLeft.setPower(-0.2);
             armRotateRight.setPower(-0.2);
-            rotatePos = (armRotateLeftEncoder.getCurrentPosition() + armRotateRightEncoder.getCurrentPosition()) / 2;
+            rotatePos = (-armRotateLeftEncoder.getCurrentPosition() - armRotateRightEncoder.getCurrentPosition()) / 2;
         } else if (rightBumper) {
             armRotateLeft.setPower(0.1);
             armRotateRight.setPower(-0.1);
-            wristPos = armRotateLeftEncoder.getCurrentPosition() - armRotateRightEncoder.getCurrentPosition();
+            wristPos = -armRotateLeftEncoder.getCurrentPosition() + armRotateRightEncoder.getCurrentPosition();
         } else if (leftBumper) {
             armRotateLeft.setPower(-0.1);
             armRotateRight.setPower(0.1);
-            wristPos = armRotateLeftEncoder.getCurrentPosition() - armRotateRightEncoder.getCurrentPosition();
+            wristPos = -armRotateLeftEncoder.getCurrentPosition() + armRotateRightEncoder.getCurrentPosition();
         } else {
             PIDFrotateTo(rotatePos, wristPos);
         }
@@ -83,7 +83,7 @@ public class ArmBase extends HardwareBase {
         rightController.setPID(pR, iR, dR);
 
         int leftPos = -armRotateLeftEncoder.getCurrentPosition();
-        double leftTarget = rotateTarget - (double) wristTarget /2;
+        double leftTarget = rotateTarget - (double) wristTarget / 2;
         //PID MATH
         double leftPID = leftController.calculate(leftPos, leftTarget);
         //feedforward math
@@ -107,10 +107,10 @@ public class ArmBase extends HardwareBase {
 
 //        int rotatePos = (leftPos+rightPos)/2;
 //        int wristPos = (leftPos-rightPos);
-//        telemetry.addData("right pos", rightPos);
-//        telemetry.addData("left pos", leftPos);
-//        telemetry.addData("right target", rightTarget);
-//        telemetry.addData("left target", leftTarget);
+        telemetry.addData("right pos", rightPos);
+        telemetry.addData("left pos", leftPos);
+        telemetry.addData("right target", rightTarget);
+        telemetry.addData("left target", leftTarget);
 //        telemetry.addData("right power", rightPower);
 //        telemetry.addData("left power", leftPower);
     }

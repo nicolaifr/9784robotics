@@ -117,7 +117,7 @@ public class Intake extends HardwareBase {
 
     public void intakeDown(boolean button, boolean button2) {
         if (button && !button2) {
-            setPivotTarget(-266);
+            setPivotTarget(-280);
 
         } else if (button2 && !button) {
             setPivotTarget(-100);

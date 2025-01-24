@@ -13,9 +13,9 @@ public class LConstants {
         OTOSConstants.hardwareMapName = "ALLINONNIGGADOLPH";
         OTOSConstants.linearUnit = DistanceUnit.INCH;
         OTOSConstants.angleUnit = AngleUnit.RADIANS;
-        OTOSConstants.offset = new SparkFunOTOS.Pose2D(2.5, -4, 0);
-        OTOSConstants.linearScalar = 1.00925;
-        OTOSConstants.angularScalar = 0.98773;
+        OTOSConstants.offset = new SparkFunOTOS.Pose2D(2.5, -3.5, Math.PI);
+        OTOSConstants.linearScalar = 1.18;
+        OTOSConstants.angularScalar = 0.98;
 
     }
 }

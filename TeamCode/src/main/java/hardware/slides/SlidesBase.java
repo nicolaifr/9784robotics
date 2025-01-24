@@ -54,19 +54,20 @@ public class SlidesBase extends HardwareBase {
         //code that uses the pidf to do cool sigma stuff
         //reversing Y cuz im like pretty sure thats how it is
         if (rightTrigger) {
-            vertSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            vertSlidesSecond.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            vertSlides.setPower(0.6);
-            vertSlidesSecond.setPower(-0.6);
+            vertSlides.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+            vertSlidesSecond.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+            vertSlides.setPower(0.5);
+            vertSlidesSecond.setPower(0.5);
             vertCurrentPos = vertSlides.getCurrentPosition();
         } else if (leftTrigger) {
-            vertSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            vertSlidesSecond.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            vertSlides.setPower(-0.6);
-            vertSlidesSecond.setPower(-0.6);
+            vertSlides.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+            vertSlidesSecond.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+            vertSlides.setPower(-0.2);
+            vertSlidesSecond.setPower(-0.2);
             vertCurrentPos = vertSlides.getCurrentPosition();
         } else {
             setVertTarget(vertCurrentPos);
+            vertSlides.setPower(0);
         }
     }
 
@@ -74,15 +75,16 @@ public class SlidesBase extends HardwareBase {
         //code that uses the pidf to do cool sigma stuff
         //reversing Y cuz im like pretty sure thats how it is
         if (rightT) {
-            horizSlides.setTargetPosition(10);
-            horizSlides.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            horizSlides.setPower(1);
+            horizTarget = 10;
+
         } else if (leftT) {
-            horizSlides.setTargetPosition(-200);
-            horizSlides.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            horizSlides.setPower(-1);
+            horizTarget = -200;
+
             //yes guys we fixed it!
         }
+        horizSlides.setTargetPosition(horizTarget);
+        horizSlides.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        horizSlides.setPower(1);
     }
 
     public void PIDF_Vert() {
