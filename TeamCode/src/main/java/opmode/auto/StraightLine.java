@@ -21,66 +21,29 @@ import pedroPathing.constants.LConstants;
 // "endPoint":{"x":40,"y":65.25,"heading":"linear","reverse":false,"startDeg":0,"endDeg":180},
 // {"endPoint":{"x":8,"y":8,"heading":"constant","reverse":false,"degrees":180},
 @Autonomous
-public class TwoSpecAuto extends OpMode{
+public class StraightLine extends OpMode{
 
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
     private int pathState;
-    private final Pose startPose = new Pose(6.25, 65.25, Math.toRadians(180));
-    private final Pose scorePreload = new Pose(40, 65.25, Math.toRadians(180));
-    private final Pose pickUpHumanSpecimen = new Pose(12, 24, Math.toRadians(0));
-    private final Pose scoreHumanSpecimen = new Pose(40, 60, Math.toRadians(180));
-    private final Pose park = new Pose(8, 8, Math.toRadians(180));
-    private Path scorePreloadPath, parkPath;
-    private PathChain pickUpHumanSpecimenPath, scoreHumanSpecimenPath;
+    private final Pose startPose = new Pose(6.25, 60, Math.toRadians(180));
+    private final Pose park = new Pose(33, 60, Math.toRadians(0));
+    private Path testPath;
 
     public void buildPaths() {
-        scorePreloadPath = new Path(new BezierLine(new Point(startPose), new Point(scorePreload)));
-        scorePreloadPath.setConstantHeadingInterpolation(startPose.getHeading());
 
-        pickUpHumanSpecimenPath = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(scorePreload), new Point(pickUpHumanSpecimen)))
-                .setLinearHeadingInterpolation(scorePreload.getHeading(), pickUpHumanSpecimen.getHeading())
-                .build();
+        testPath = new Path(new BezierLine(new Point(startPose), new Point(park)));
+        testPath.setLinearHeadingInterpolation(startPose.getHeading(), park.getHeading());
 
-        scoreHumanSpecimenPath = follower.pathBuilder()
-                .addPath(new BezierCurve(new Point(pickUpHumanSpecimen), new Point(scoreHumanSpecimen)))
-                .setLinearHeadingInterpolation(pickUpHumanSpecimen.getHeading(), scoreHumanSpecimen.getHeading())
-                .build();
-
-        parkPath = new Path(new BezierLine(new Point(scoreHumanSpecimen), new Point(park)));
-        parkPath.setConstantHeadingInterpolation(park.getHeading());
     }
     public void autonomousPathUpdate() {
         switch (pathState) {
             case 0: // score preload
-                follower.followPath(scorePreloadPath);
+                follower.followPath(testPath, false);
                 setPathState(1);
                 break;
-
-            case 1: // pickup human specimen
-                if (follower.getPose().getX() > (scorePreload.getX() - 1) && follower.getPose().getY() > (scorePreload.getY() - 1)) {
-                    follower.followPath(pickUpHumanSpecimenPath, true);
-                    setPathState(2);
-                }
-                break;
-
-            case 2: // score human specimen
-                if (follower.getPose().getX() > (pickUpHumanSpecimen.getX() - 1) && follower.getPose().getY() > (pickUpHumanSpecimen.getY() - 1)) {
-                    follower.followPath(scoreHumanSpecimenPath, true);
-                    setPathState(3);
-                }
-                break;
-
-            case 3: // park
-                if (follower.getPose().getX() > (scoreHumanSpecimen.getX() - 1) && follower.getPose().getY() > (scoreHumanSpecimen.getY() - 1)) {
-                    follower.followPath(parkPath);
-                    setPathState(4);
-                }
-                break;
-
-            case 4: // end auto
-                if (follower.getPose().getX() > (park.getX() - 1) && follower.getPose().getY() > (park.getY() - 1)) {
+            case 1:
+                if (!follower.isBusy()) {
                     setPathState(-1);
                 }
                 break;

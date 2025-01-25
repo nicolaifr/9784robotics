@@ -89,7 +89,7 @@ public class ArmBase extends HardwareBase {
         //feedforward math
         double leftFF = Math.cos(Math.toRadians(leftTarget/ticks_in_degree)) * f;
         //power calculated
-        double leftPower = Range.clip(leftPID + leftFF, -1, 1);
+        double leftPower = Range.clip(leftPID + leftFF, -0.5, 0.5);
 
         int rightPos = -armRotateRightEncoder.getCurrentPosition();
         double rightTarget = rotateTarget + (double) wristTarget / 2;

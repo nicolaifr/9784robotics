@@ -2,6 +2,9 @@ package opmode.teleop;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.pedropathing.follower.Follower;
+import com.pedropathing.localization.Pose;
+import com.pedropathing.util.Constants;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -12,6 +15,8 @@ import hardware.claw.PIDF_Pivot;
 import hardware.drive.DriveTrainBase;
 import hardware.claw.OutTake;
 import hardware.slides.SlidesBase;
+import pedroPathing.constants.FConstants;
+import pedroPathing.constants.LConstants;
 
 
 @TeleOp
@@ -21,6 +26,7 @@ public class IntoTheDeepTeleop extends OpMode {
     SlidesBase slides;
     Intake intake;
     ArmBase arm;
+
 
     int clawState;
     @Override
@@ -43,8 +49,13 @@ public class IntoTheDeepTeleop extends OpMode {
     }
 
     @Override
+    public void start() {
+
+    }
+
+    @Override
     public void loop() {
-        drive.driveJoystick(-gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+        drive.driveJoystick(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, -gamepad1.right_stick_y, gamepad1.left_trigger-gamepad1.right_trigger);
         getTelemetry();
         OutTakeControls();
         IntakeControls();
