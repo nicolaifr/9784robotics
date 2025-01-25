@@ -11,7 +11,12 @@ import com.pedropathing.util.Constants;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+import hardware.arm.ArmBase;
+import hardware.claw.OutTake;
 import pedroPathing.constants.FConstants;
 import pedroPathing.constants.LConstants;
 
@@ -27,19 +32,25 @@ public class StraightLine extends OpMode{
     private Timer pathTimer, actionTimer, opmodeTimer;
     private int pathState;
     private final Pose startPose = new Pose(6.25, 60, Math.toRadians(180));
-    private final Pose park = new Pose(33, 60, Math.toRadians(0));
-    private Path testPath;
+    private final Pose park = new Pose(34, 65, Math.toRadians(0));
+    private PathChain testPath;
+
+    public ArmBase arm;
+    public OutTake claw;
 
     public void buildPaths() {
-
-        testPath = new Path(new BezierLine(new Point(startPose), new Point(park)));
-        testPath.setLinearHeadingInterpolation(startPose.getHeading(), park.getHeading());
+        testPath = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(startPose), new Point(park)))
+                .setLinearHeadingInterpolation(startPose.getHeading(), park.getHeading())
+                .build();
 
     }
     public void autonomousPathUpdate() {
         switch (pathState) {
             case 0: // score preload
-                follower.followPath(testPath, false);
+                pathTimer.resetTimer();
+                follower.followPath(testPath, true);
+
                 setPathState(1);
                 break;
             case 1:
@@ -53,10 +64,22 @@ public class StraightLine extends OpMode{
         pathState = pState;
         pathTimer.resetTimer();
     }
+
+    public void armControls() {
+        if (pathTimer.getElapsedTime() >= 3 && pathTimer.getElapsedTime() <= 7 && pathState == -1){
+            arm.setRotateTarget(4300);
+        }
+    }
     @Override
     public void init() {
         pathTimer = new Timer();
         opmodeTimer = new Timer();
+
+        arm = new ArmBase();
+        claw = new OutTake();
+
+        arm.init(hardwareMap, telemetry);
+        claw.init(hardwareMap, telemetry);
 
         Constants.setConstants(FConstants.class, LConstants.class);
         follower = new Follower(hardwareMap);
@@ -66,7 +89,9 @@ public class StraightLine extends OpMode{
 
     @Override
     public void init_loop(){
+        claw.closeClamp();
         opmodeTimer.resetTimer();
+        pathTimer.resetTimer();
     }
 
     @Override
@@ -74,6 +99,9 @@ public class StraightLine extends OpMode{
         // These loop the movements of the robot
         follower.update();
         autonomousPathUpdate();
+        arm.PIDFrotateTo();
+
+        armControls();
 
         // Feedback to Driver Hub
         telemetry.addData("path state", pathState);
@@ -88,6 +116,7 @@ public class StraightLine extends OpMode{
     @Override
     public void start() {
         opmodeTimer.resetTimer();
+        pathTimer.resetTimer();
         setPathState(0);
     }
 }

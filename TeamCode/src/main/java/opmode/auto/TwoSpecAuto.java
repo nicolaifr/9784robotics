@@ -20,7 +20,7 @@ import pedroPathing.constants.LConstants;
 // {"endPoint":{"x":12,"y":24,"heading":"linear","reverse":false,"degrees":0,"startDeg":180,"endDeg":0},
 // "endPoint":{"x":40,"y":65.25,"heading":"linear","reverse":false,"startDeg":0,"endDeg":180},
 // {"endPoint":{"x":8,"y":8,"heading":"constant","reverse":false,"degrees":180},
-@Autonomous
+
 public class TwoSpecAuto extends OpMode{
 
     private Follower follower;
@@ -54,27 +54,27 @@ public class TwoSpecAuto extends OpMode{
     public void autonomousPathUpdate() {
         switch (pathState) {
             case 0: // score preload
-                follower.followPath(scorePreloadPath);
+                follower.followPath(scorePreloadPath, true);
                 setPathState(1);
                 break;
 
             case 1: // pickup human specimen
                 if (!follower.isBusy()) {
-                    follower.followPath(pickUpHumanSpecimenPath, false);
+                    follower.followPath(pickUpHumanSpecimenPath, true);
                     setPathState(2);
                 }
                 break;
 
             case 2: // score human specimen
                 if (!follower.isBusy()) {
-                    follower.followPath(scoreHumanSpecimenPath, false);
+                    follower.followPath(scoreHumanSpecimenPath, true);
                     setPathState(3);
                 }
                 break;
 
             case 3: // park
                 if (!follower.isBusy()) {
-                    follower.followPath(parkPath);
+                    follower.followPath(parkPath, true);
                     setPathState(4);
                 }
                 break;

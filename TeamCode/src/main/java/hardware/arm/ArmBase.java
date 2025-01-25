@@ -27,11 +27,14 @@ public class ArmBase extends HardwareBase {
     private PIDController leftController;
     private PIDController rightController;
     //P,I,D in the PID controller watch KookyBotz Video for more info
-    public static double pR = 0.0004, iR = 0, dR = 0.00002;
+    public static double pR = 0.0007, iR = 0, dR = 0.00001;
     //feedforward
-    public static double f = -0.05;
+    public static double f = 0.15;
     //how many ticks in degree USING REV THROUGH BORE ENCODER
     private final double ticks_in_degree = (double) 8192/360;
+
+    int rotateTarget;
+    int wristTarget;
 
     @Override
     public void init(HardwareMap ahwMap, Telemetry t) {
@@ -75,34 +78,38 @@ public class ArmBase extends HardwareBase {
             armRotateRight.setPower(0.1);
             wristPos = -armRotateLeftEncoder.getCurrentPosition() + armRotateRightEncoder.getCurrentPosition();
         } else {
-            PIDFrotateTo(rotatePos, wristPos);
+
         }
     }
-    public void PIDFrotateTo(int rotateTarget, int wristTarget) {
+    public void PIDFrotateTo() {
+        //loop code when "PLAY/Triangle" is hit loops over again while opmode is active
         leftController.setPID(pR, iR, dR);
         rightController.setPID(pR, iR, dR);
 
-        int leftPos = -armRotateLeftEncoder.getCurrentPosition();
-        double leftTarget = rotateTarget - (double) wristTarget / 2;
+        int leftPos = armRotateLeftEncoder.getCurrentPosition();
+        double leftTarget = rotateTarget - (double) wristTarget /2;
         //PID MATH
         double leftPID = leftController.calculate(leftPos, leftTarget);
         //feedforward math
         double leftFF = Math.cos(Math.toRadians(leftTarget/ticks_in_degree)) * f;
         //power calculated
-        double leftPower = Range.clip(leftPID + leftFF, -0.5, 0.5);
+        double leftPower = leftPID + leftFF;
 
         int rightPos = -armRotateRightEncoder.getCurrentPosition();
-        double rightTarget = rotateTarget + (double) wristTarget / 2;
+        double rightTarget = rotateTarget + (double) wristTarget /2;
         //PID MATH
         double rightPID = rightController.calculate(rightPos, rightTarget);
         //feedforward math
         double rightFF = Math.cos(Math.toRadians(rightTarget/ticks_in_degree)) * f;
         //power calculated
-        double rightPower = Range.clip(rightPID + rightFF, -1, 1);
+        double rightPower = rightPID + rightFF;
 
+        leftPower = Range.clip(leftPower, -1, 1);
+        rightPower = Range.clip(rightPower, -1, 1);
         //setting motor power after all those calculations
         armRotateLeft.setPower(leftPower);
         armRotateRight.setPower(rightPower);
+        //telemetry for tuning
         //telemetry for tuning
 
 //        int rotatePos = (leftPos+rightPos)/2;
@@ -113,5 +120,9 @@ public class ArmBase extends HardwareBase {
         telemetry.addData("left target", leftTarget);
 //        telemetry.addData("right power", rightPower);
 //        telemetry.addData("left power", leftPower);
+    }
+
+    public void setRotateTarget(int newTarget) {
+        rotateTarget = newTarget;
     }
 }
