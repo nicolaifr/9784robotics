@@ -57,6 +57,8 @@ public class ArmBase extends HardwareBase {
         armRotateLeftEncoder.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         armRotateRightEncoder.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
+        rotateTarget = 0;
+
     }
 
     public void arm(double rightTrigger, double leftTrigger, boolean rightBumper, boolean leftBumper) {
@@ -86,7 +88,7 @@ public class ArmBase extends HardwareBase {
         leftController.setPID(pR, iR, dR);
         rightController.setPID(pR, iR, dR);
 
-        int leftPos = armRotateLeftEncoder.getCurrentPosition();
+        int leftPos = -armRotateLeftEncoder.getCurrentPosition();
         double leftTarget = rotateTarget - (double) wristTarget /2;
         //PID MATH
         double leftPID = leftController.calculate(leftPos, leftTarget);

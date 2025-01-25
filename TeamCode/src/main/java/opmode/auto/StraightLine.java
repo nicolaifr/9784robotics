@@ -32,7 +32,7 @@ public class StraightLine extends OpMode{
     private Timer pathTimer, actionTimer, opmodeTimer;
     private int pathState;
     private final Pose startPose = new Pose(6.25, 60, Math.toRadians(180));
-    private final Pose park = new Pose(34, 65, Math.toRadians(0));
+    private final Pose park = new Pose(35, 65, Math.toRadians(180));
     private PathChain testPath;
 
     public ArmBase arm;
@@ -66,8 +66,8 @@ public class StraightLine extends OpMode{
     }
 
     public void armControls() {
-        if (pathTimer.getElapsedTime() >= 3 && pathTimer.getElapsedTime() <= 7 && pathState == -1){
-            arm.setRotateTarget(4300);
+        if (pathTimer.getElapsedTime() >= 3 && pathTimer.getElapsedTime() <= 7){
+            arm.setRotateTarget(0);
         }
     }
     @Override
