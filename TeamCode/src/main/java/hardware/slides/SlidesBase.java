@@ -56,8 +56,8 @@ public class SlidesBase extends HardwareBase {
         if (rightTrigger) {
             vertSlides.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
             vertSlidesSecond.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-            vertSlides.setPower(0.5);
-            vertSlidesSecond.setPower(0.5);
+            vertSlides.setPower(1);
+            vertSlidesSecond.setPower(1);
             vertCurrentPos = vertSlides.getCurrentPosition();
         } else if (leftTrigger) {
             vertSlides.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);

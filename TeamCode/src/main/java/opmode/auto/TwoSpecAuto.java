@@ -26,10 +26,10 @@ public class TwoSpecAuto extends OpMode{
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
     private int pathState;
-    private final Pose startPose = new Pose(6.25, 65.25, Math.toRadians(180));
-    private final Pose scorePreload = new Pose(40, 65.25, Math.toRadians(180));
+    private final Pose startPose = new Pose(7, 62, Math.toRadians(180));
+    private final Pose scorePreload = new Pose(33, 62, Math.toRadians(180));
     private final Pose pickUpHumanSpecimen = new Pose(12, 24, Math.toRadians(0));
-    private final Pose scoreHumanSpecimen = new Pose(40, 60, Math.toRadians(180));
+    private final Pose scoreHumanSpecimen = new Pose(33, 68, Math.toRadians(180));
     private final Pose park = new Pose(8, 8, Math.toRadians(180));
     private Path scorePreloadPath, parkPath;
     private PathChain pickUpHumanSpecimenPath, scoreHumanSpecimenPath;
@@ -59,28 +59,28 @@ public class TwoSpecAuto extends OpMode{
                 break;
 
             case 1: // pickup human specimen
-                if (follower.getPose().getX() > (scorePreload.getX() - 1) && follower.getPose().getY() > (scorePreload.getY() - 1)) {
-                    follower.followPath(pickUpHumanSpecimenPath, true);
+                if (!follower.isBusy()) {
+                    follower.followPath(pickUpHumanSpecimenPath, false);
                     setPathState(2);
                 }
                 break;
 
             case 2: // score human specimen
-                if (follower.getPose().getX() > (pickUpHumanSpecimen.getX() - 1) && follower.getPose().getY() > (pickUpHumanSpecimen.getY() - 1)) {
-                    follower.followPath(scoreHumanSpecimenPath, true);
+                if (!follower.isBusy()) {
+                    follower.followPath(scoreHumanSpecimenPath, false);
                     setPathState(3);
                 }
                 break;
 
             case 3: // park
-                if (follower.getPose().getX() > (scoreHumanSpecimen.getX() - 1) && follower.getPose().getY() > (scoreHumanSpecimen.getY() - 1)) {
+                if (!follower.isBusy()) {
                     follower.followPath(parkPath);
                     setPathState(4);
                 }
                 break;
 
             case 4: // end auto
-                if (follower.getPose().getX() > (park.getX() - 1) && follower.getPose().getY() > (park.getY() - 1)) {
+                if (!follower.isBusy()) {
                     setPathState(-1);
                 }
                 break;
