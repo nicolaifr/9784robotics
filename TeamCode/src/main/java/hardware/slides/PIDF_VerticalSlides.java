@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @Config
-@TeleOp
+
 public class PIDF_VerticalSlides extends OpMode {
 
     private PIDController controller;

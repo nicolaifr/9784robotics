@@ -12,8 +12,8 @@ public class OutTake extends HardwareBase {
 
     Servo testServo;
     Servo testServo1;
-    Servo wrist;
-    Servo clamp;
+    public Servo wrist;
+    public Servo clamp;
 
     public double armPos;
     public double wristPos;
@@ -33,26 +33,26 @@ public class OutTake extends HardwareBase {
     }
     public void clamp(boolean rb, boolean lb){
         if (rb) {
-            clamp.setPosition(0.7);
+            clamp.setPosition(1);
         } else if (lb) {
-            clamp.setPosition(0.3);
+            clamp.setPosition(0);
         }
     }
 
-    public void wrist(double rt) {
-        if(rt >= 0.9 && wristPos <= 1) {
-            wristPos += 0.01;
+    public void wrist(boolean leftButton, boolean rightButton) {
+        if(rightButton && wristPos <= 1) {
+            wristPos += 0.03;
             wrist.setPosition(wristPos);
-        } else if (rt <= -0.9 && wristPos >= -1) {
-            wristPos -= 0.01;
+        } else if (leftButton && wristPos >= -1) {
+            wristPos -= 0.03;
             wrist.setPosition(wristPos);
         }
     }
 
     public void closeClamp() {
-        clamp.setPosition(0.7);
+        clamp.setPosition(1);
     }
     public void openClamp() {
-        clamp.setPosition(0.3);
+        clamp.setPosition(0);
     }
 }

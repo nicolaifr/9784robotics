@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Config
-@TeleOp
+
 public class testServo extends OpMode {
     private CRServo testServo1;
 

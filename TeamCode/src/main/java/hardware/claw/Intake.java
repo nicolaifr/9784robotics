@@ -14,7 +14,7 @@ import hardware.HardwareBase;
 
 public class Intake extends HardwareBase {
     private PIDController pivotController;
-    public static double p = 0.015, i = 0, d = 0.001;
+    public static double p = 0.01, i = 0, d = 0.000;
     public static double f = 0.1;
     private final double ticks_in_degree = ((double) 8192) /360;
 
@@ -108,7 +108,7 @@ public class Intake extends HardwareBase {
             //power calculated
             double power = (pid + ff);
             //setting motor power after all those calculations
-            monsterPivot.setPower(Range.clip(power, -0.4, 0.6));
+            monsterPivot.setPower(Range.clip(power, -0.3, 0.45));
     }
 
     public void setPivotTarget(int newTarget) {
@@ -117,10 +117,12 @@ public class Intake extends HardwareBase {
 
     public void intakeDown(boolean button, boolean button2) {
         if (button && !button2) {
-            setPivotTarget(-260);
+            setPivotTarget(-277);
 
         } else if (button2 && !button) {
             setPivotTarget(-100);
+        } else {
+            PIDF_Pivot();
         }
     }
 }

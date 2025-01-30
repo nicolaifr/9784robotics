@@ -3,6 +3,7 @@ package hardware.slides;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -20,7 +21,7 @@ public class SlidesBase extends HardwareBase {
     int vertCurrentPos;
     public int horizCurrentPos;
     //P,I,D in the PID controller watch KookyBotz Video for more info
-    public static double pH = 0.09, iH = 0, dH = 0.001;
+    public static double pH = 0.07, iH = 0, dH = 0.0001;
     public static double pV = 0.04, iV = 0, dV = 0.001;
     //feedforward
     public static double Vf = 0.001;
@@ -41,6 +42,7 @@ public class SlidesBase extends HardwareBase {
         vertSlidesSecond = ahwMap.get(DcMotorEx.class, "vertSlidesSecond");
 
         horizSlides.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        horizSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         vertSlides.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         vertSlides.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         vertSlidesSecond.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -66,8 +68,12 @@ public class SlidesBase extends HardwareBase {
             vertSlidesSecond.setPower(-0.2);
             vertCurrentPos = vertSlides.getCurrentPosition();
         } else {
-            setVertTarget(vertCurrentPos);
-            vertSlides.setPower(0);
+            vertSlides.setTargetPosition(vertCurrentPos);
+            vertSlides.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            vertSlides.setPower(0.3);
+
+//            setVertTarget(vertCurrentPos);
+//            vertSlides.setPower(0);
         }
     }
 
@@ -75,16 +81,17 @@ public class SlidesBase extends HardwareBase {
         //code that uses the pidf to do cool sigma stuff
         //reversing Y cuz im like pretty sure thats how it is
         if (rightT) {
-            horizTarget = 10;
+            horizSlides.setDirection(DcMotorSimple.Direction.REVERSE);
+            horizSlides.setPower(1);
+            horizTarget = horizSlides.getCurrentPosition();
 
         } else if (leftT) {
-            horizTarget = -200;
-
+            horizSlides.setDirection(DcMotorSimple.Direction.FORWARD);
+            horizSlides.setPower(1);
+            horizTarget = horizSlides.getCurrentPosition();
             //yes guys we fixed it!
         }
-        horizSlides.setTargetPosition(horizTarget);
-        horizSlides.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        horizSlides.setPower(1);
+        horizSlides.setPower(0);
     }
 
     public void PIDF_Vert() {

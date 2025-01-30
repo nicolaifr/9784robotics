@@ -52,29 +52,29 @@ public class DriveTrainBase extends HardwareBase {
 
         follower.startTeleopDrive();
     }
-    public void driveJoystick(double left_stick_y, double left_stick_x, double right_stick_x, double right_stick_y, double turn) {
-//        double y = left_stick_y; // Remember, Y stick value is reversed
-//        double x = left_stick_x; // Counteract imperfect strafing
-//        double rx = right_stick_x;
-//
-//        // Denominator is the largest motor power (absolute value) or 1
-//        // This ensures all the powers maintain the same ratio,
-//        // but only if at least one is out of the range [-1, 1]
-//        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 0.8);
-//        double frontLeftPower = (y + x + rx) / denominator;
-//        double backLeftPower = (y - x + rx) / denominator;
-//        double frontRightPower = (y - x - rx) / denominator;
-//        double backRightPower = (y + x - rx) / denominator;
-//
-//        leftFront.setPower(frontLeftPower);
-//        rightFront.setPower(frontRightPower);
-//        leftBack.setPower(backLeftPower);
-//        rightBack.setPower(backRightPower);
-        if (left_stick_x != 0 || left_stick_y != 0) {
-            follower.setTeleOpMovementVectors(left_stick_y * 0.75, left_stick_x * 0.75, turn, true);
-        } else {
-            follower.setTeleOpMovementVectors(right_stick_y * 0.75, right_stick_x * 0.75, turn, false);
-        }
-        follower.update();
+    public void driveJoystick(double left_stick_y, double left_stick_x, double right_stick_x) {
+        double y = left_stick_y; // Remember, Y stick value is reversed
+        double x = left_stick_x; // Counteract imperfect strafing
+        double rx = right_stick_x;
+
+        // Denominator is the largest motor power (absolute value) or 1
+        // This ensures all the powers maintain the same ratio,
+        // but only if at least one is out of the range [-1, 1]
+        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 0.8);
+        double frontLeftPower = (y + x + rx) / denominator;
+        double backLeftPower = (y - x + rx) / denominator;
+        double frontRightPower = (y - x - rx) / denominator;
+        double backRightPower = (y + x - rx) / denominator;
+
+        leftFront.setPower(frontLeftPower* 0.75);
+        rightFront.setPower(frontRightPower * 0.75);
+        leftBack.setPower(backLeftPower * 0.75);
+        rightBack.setPower(backRightPower * 0.75);
+//        if (left_stick_x != 0 || left_stick_y != 0) {
+//            follower.setTeleOpMovementVectors(left_stick_y * 0.75, left_stick_x * 0.75, turn, true);
+//        } else {
+//            follower.setTeleOpMovementVectors(right_stick_y * 0.75, right_stick_x * 0.75, turn, false);
+//        }
+//        follower.update();
     }
 }

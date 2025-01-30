@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
 @Config
@@ -43,6 +44,7 @@ public class PIDF_ArmLeftRight extends OpMode {
         armRotateLeft = hardwareMap.get(CRServo.class, "ArmLeft");
         armRotateRight = hardwareMap.get(CRServo.class, "ArmRight");
 
+
         armRotateLeftEncoder = hardwareMap.get(DcMotorEx.class, "leftFrontWheel");
         armRotateRightEncoder = hardwareMap.get(DcMotorEx.class, "rightFrontWheel");
 
@@ -51,6 +53,7 @@ public class PIDF_ArmLeftRight extends OpMode {
         armRotateLeftEncoder.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         armRotateRightEncoder.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
+        armRotateLeftEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     @Override
@@ -59,7 +62,7 @@ public class PIDF_ArmLeftRight extends OpMode {
         leftController.setPID(pR, iR, dR);
         rightController.setPID(pR, iR, dR);
 
-        int leftPos = armRotateLeftEncoder.getCurrentPosition();
+        int leftPos = -armRotateLeftEncoder.getCurrentPosition();
         double leftTarget = rotateTarget - (double) wristTarget /2;
         //PID MATH
         double leftPID = leftController.calculate(leftPos, leftTarget);

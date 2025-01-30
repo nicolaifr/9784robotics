@@ -12,7 +12,7 @@ import hardware.drive.DriveTrainBase;
 import hardware.slides.SlidesBase;
 
 
-@TeleOp
+
 public class ArmTest extends OpMode {
     ArmBase arm;
     Intake intake;

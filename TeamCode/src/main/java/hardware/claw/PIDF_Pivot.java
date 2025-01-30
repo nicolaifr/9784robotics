@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
-@TeleOp
 @Config
 public class PIDF_Pivot extends OpMode {
     private PIDController controller;
@@ -30,8 +29,8 @@ public class PIDF_Pivot extends OpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         pivot = hardwareMap.get(DcMotorEx.class, "pivotMotor");
-        pivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        pivot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        pivot.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        pivot.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
 
     }
 
