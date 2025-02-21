@@ -52,9 +52,9 @@ public class ArmTest extends OpMode {
     }
 
     public void getTelemetry() {
-        telemetry.addData("left position", arm.armRotateLeftEncoder.getCurrentPosition());
+        telemetry.addData("left position", arm.leftEncoderPos());
         telemetry.addData("armPos", arm.rotatePos);
-        telemetry.addData("right position", arm.armRotateRightEncoder.getCurrentPosition());
+        telemetry.addData("right position", arm.rightEncoderPos());
         telemetry.update();
     }
 }
