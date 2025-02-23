@@ -12,7 +12,7 @@ import hardware.drive.DriveTrainBase;
 import hardware.slides.SlidesBase;
 
 
-
+@TeleOp
 public class ArmTest extends OpMode {
     ArmBase arm;
     Intake intake;
@@ -34,6 +34,7 @@ public class ArmTest extends OpMode {
     public void loop() {
         getTelemetry();
         IntakeControls();
+        OutTakeControls();
     }
     public void OutTakeControls(){
 
@@ -41,8 +42,8 @@ public class ArmTest extends OpMode {
     }
 
     public void IntakeControls() {
-        intake.clawClamp(gamepad2.a);
-        intake.clawWrist(gamepad2.dpad_up, gamepad2.dpad_down);
+        intake.intakeControl(gamepad2.dpad_left, gamepad2.dpad_right);
+        intake.swivelControl(gamepad2.dpad_down, gamepad2.dpad_up);
     }
 
     public void SlidesControls() {

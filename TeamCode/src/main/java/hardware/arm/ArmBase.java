@@ -28,9 +28,9 @@ public class ArmBase extends HardwareBase {
     private PIDController leftController;
     private PIDController rightController;
     //P,I,D in the PID controller watch KookyBotz Video for more info
-    public static double pR = 0.0003, iR = 0, dR = 0.00002;
+    public static double pR = 0.0007, iR = 0, dR = 0.00002;
     //feedforward
-    public static double f = -0.05;
+    public static double f = 0.01;
     //how many ticks in degree USING REV THROUGH BORE ENCODER
     private final double ticks_in_degree = (double) 8192/360;
 
@@ -50,10 +50,8 @@ public class ArmBase extends HardwareBase {
         armRotateLeft = ahwMap.get(CRServo.class, "ArmLeft");
         armRotateRight = ahwMap.get(CRServo.class, "ArmRight");
 
-        armRotateLeftEncoder = ahwMap.get(AnalogInput.class, "leftFrontWheel");
-        armRotateRightEncoder = ahwMap.get(AnalogInput.class, "rightFrontWheel");
-
-        double rotateTarget = 0;
+        armRotateLeftEncoder = ahwMap.get(AnalogInput.class, "leftArmEncoder");
+        armRotateRightEncoder = ahwMap.get(AnalogInput.class, "rightArmEncoder");
 
     }
 
@@ -68,21 +66,13 @@ public class ArmBase extends HardwareBase {
     public void arm(double rightTrigger, double leftTrigger, boolean rightBumper, boolean leftBumper) {
         //code that uses the pidf to do cool sigma stuff
         if (rightTrigger >= 0.9) {
-            armRotateLeft.setPower(0.2);
-            armRotateRight.setPower(0.2);
-            rotatePos = (leftEncoderPos() + rightEncoderPos()) / 2;
+            armRotateLeft.setPower(0.8);
+            armRotateRight.setPower(-0.8);
+            rotatePos = rightEncoderPos();
         } else if (leftTrigger >= 0.9) {
-            armRotateLeft.setPower(-0.2);
-            armRotateRight.setPower(-0.2);
-            rotatePos = (leftEncoderPos() + rightEncoderPos()) / 2;
-        } else if (rightBumper) {
-            armRotateLeft.setPower(0.1);
-            armRotateRight.setPower(-0.1);
-            wristPos = leftEncoderPos() - rightEncoderPos();
-        } else if (leftBumper) {
-            armRotateLeft.setPower(-0.1);
-            armRotateRight.setPower(0.1);
-            wristPos = leftEncoderPos() - rightEncoderPos();
+            armRotateLeft.setPower(-0.8);
+            armRotateRight.setPower(0.8);
+            rotatePos = rightEncoderPos();
         } else {
             setRotateTarget(rotatePos);
             PIDFrotateTo();
@@ -94,7 +84,7 @@ public class ArmBase extends HardwareBase {
         rightController.setPID(pR, iR, dR);
 
         double leftPos = leftEncoderPos();
-        double leftTarget = rotateTarget - wristTarget /2;
+        double leftTarget = rotateTarget;
         //PID MATH
         double leftPID = leftController.calculate(leftPos, leftTarget);
         //feedforward math
@@ -103,7 +93,7 @@ public class ArmBase extends HardwareBase {
         double leftPower = leftPID + leftFF;
 
         double rightPos = rightEncoderPos();
-        double rightTarget = rotateTarget + wristTarget /2;
+        double rightTarget = rotateTarget;
         //PID MATH
         double rightPID = rightController.calculate(rightPos, rightTarget);
         //feedforward math
@@ -115,17 +105,19 @@ public class ArmBase extends HardwareBase {
         rightPower = Range.clip(rightPower, -1, 1);
         //setting motor power after all those calculations
         armRotateLeft.setPower(leftPower);
-        armRotateRight.setPower(rightPower);
+        armRotateRight.setPower(leftPower);
+//        armRotateRight.setPower(rightPower);
+
         //telemetry for tuning
         //telemetry for tuning
 
 //        int rotatePos = (leftPos+rightPos)/2;
 //        int wristPos = (leftPos-rightPos);
-        telemetry.addData("right pos", rightPos);
-        telemetry.addData("left pos", leftPos);
-        telemetry.addData("right target", rightTarget);
-        telemetry.addData("left target", leftTarget);
-        telemetry.update();
+//        telemetry.addData("right pos", rightPos);
+//        telemetry.addData("left pos", leftPos);
+//        telemetry.addData("right target", rightTarget);
+//        telemetry.addData("left target", leftTarget);
+//        telemetry.update();
 //        telemetry.addData("right power", rightPower);
 //        telemetry.addData("left power", leftPower);
     }

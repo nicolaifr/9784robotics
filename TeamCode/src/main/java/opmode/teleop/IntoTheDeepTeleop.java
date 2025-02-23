@@ -62,24 +62,22 @@ public class IntoTheDeepTeleop extends OpMode {
         SlidesControls();
 
 
-        outtake.wrist.setPosition(0);
+        outtake.wrist.setPosition(0.15);
     }
     public void OutTakeControls(){
-        outtake.clamp(gamepad2.dpad_up, gamepad2.dpad_down);
+        outtake.clamp(gamepad2.x, gamepad2.y);
         outtake.wrist(gamepad2.b, gamepad2.a);
         arm.arm(gamepad2.right_trigger, gamepad2.left_trigger, gamepad2.right_bumper, gamepad2.left_bumper);
     }
 
     public void IntakeControls() {
-//        intake.clawWrist(gamepad2.b, gamepad2.x);
-//        intake.clawClamp(gamepad2.a);
-//        intake.intakeDown(gamepad2.dpad_right, gamepad2.dpad_left);
-//        intake.PIDF_Pivot();
+        intake.intakeControl(gamepad2.dpad_left, gamepad2.dpad_right);
+        intake.swivelControl(gamepad2.dpad_down, gamepad2.dpad_up);
     }
 
     public void SlidesControls() {
-//        slides.verticalSlidesControls(gamepad2.left_stick_y > 0.9, gamepad2.left_stick_y < -0.9);
-//        slides.horizSlidesControls(gamepad2.right_stick_y > 0.9, gamepad2.right_stick_x < -0.9);
+        slides.verticalSlidesControls(gamepad2.left_stick_button, gamepad2.right_stick_button);
+        slides.horizSlidesControls(gamepad2.right_stick_y > 0.9, gamepad2.right_stick_y < -0.9);
         //slides.PIDF_Vert();
 //        slides.PIDF_H();
     }
@@ -87,7 +85,10 @@ public class IntoTheDeepTeleop extends OpMode {
     public void getTelemetry() {
 //        telemetry.addData("rotatePos", arm.rotatePos);
 //        telemetry.addData("wristPos", arm.wristPos);
-        telemetry.addData("horiz power", slides.horizSlides.getPower());
+        telemetry.addData("arm rotate pos", arm.rotatePos);
+        telemetry.addData("arm target", arm.rightEncoderPos());
+        telemetry.addData("vertical slides", slides.slidesPos);
+        telemetry.addData("outtake pos", outtake.wristPos);
         telemetry.update();
     }
 }

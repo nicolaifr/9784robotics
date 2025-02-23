@@ -19,6 +19,7 @@ public class SlidesBase extends HardwareBase {
     private PIDController horizController;
     private PIDController vertController;
     int vertCurrentPos;
+    public int slidesPos;
     public int horizCurrentPos;
     //P,I,D in the PID controller watch KookyBotz Video for more info
     public static double pH = 0.07, iH = 0, dH = 0.0001;
@@ -50,48 +51,63 @@ public class SlidesBase extends HardwareBase {
 
         vertTarget = 0;
         horizTarget = 0;
+        slidesPos = 0;
     }
 
     public void verticalSlidesControls(boolean rightTrigger, boolean leftTrigger) {
         //code that uses the pidf to do cool sigma stuff
         //reversing Y cuz im like pretty sure thats how it is
         if (rightTrigger) {
-            vertSlides.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-            vertSlidesSecond.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-            vertSlides.setPower(1);
-            vertSlidesSecond.setPower(1);
-            vertCurrentPos = vertSlides.getCurrentPosition();
-        } else if (leftTrigger) {
-            vertSlides.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-            vertSlidesSecond.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-            vertSlides.setPower(-0.2);
-            vertSlidesSecond.setPower(-0.2);
-            vertCurrentPos = vertSlides.getCurrentPosition();
-        } else {
-            vertSlides.setTargetPosition(vertCurrentPos);
+            vertSlides.setDirection(DcMotorSimple.Direction.FORWARD);
+            vertSlidesSecond.setDirection(DcMotorSimple.Direction.REVERSE);
+            vertSlides.setTargetPosition(slidesPos+=50);
+            vertSlidesSecond.setTargetPosition(slidesPos += 50);
             vertSlides.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            vertSlides.setPower(0.3);
-
+            vertSlidesSecond.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            vertSlides.setPower(0.5);
+            vertSlidesSecond.setPower(0.5);
+            vertTarget = vertSlides.getCurrentPosition();
+        } else if (leftTrigger) {
+            vertSlides.setDirection(DcMotorSimple.Direction.FORWARD);
+            vertSlidesSecond.setDirection(DcMotorSimple.Direction.REVERSE);
+            vertSlides.setTargetPosition(slidesPos-=50);
+            vertSlidesSecond.setTargetPosition(slidesPos -= 50);
+            vertSlides.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            vertSlidesSecond.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            vertSlides.setPower(0.5);
+            vertSlidesSecond.setPower(0.5);
+            vertTarget = vertSlides.getCurrentPosition();
+        } else {
 //            setVertTarget(vertCurrentPos);
 //            vertSlides.setPower(0);
+//            vertSlides.setTargetPosition(slidesPos);
+//            vertSlidesSecond.setTargetPosition(slidesPos);
+//            vertSlides.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            vertSlidesSecond.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//            vertSlides.setPower(1);
+//            vertSlidesSecond.setPower(1);
         }
     }
 
     public void horizSlidesControls(boolean leftT, boolean rightT) {
         //code that uses the pidf to do cool sigma stuff
         //reversing Y cuz im like pretty sure thats how it is
-        if (rightT) {
+        if (rightT && horizSlides.getCurrentPosition() < 50) {
             horizSlides.setDirection(DcMotorSimple.Direction.REVERSE);
+            horizSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             horizSlides.setPower(1);
             horizTarget = horizSlides.getCurrentPosition();
 
-        } else if (leftT) {
+        } else if (leftT && horizSlides.getCurrentPosition() > -10) {
             horizSlides.setDirection(DcMotorSimple.Direction.FORWARD);
+            horizSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             horizSlides.setPower(1);
             horizTarget = horizSlides.getCurrentPosition();
             //yes guys we fixed it!
         }
-        horizSlides.setPower(0);
+        horizSlides.setTargetPosition(horizTarget);
+        horizSlides.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        horizSlides.setPower(0.7);
     }
 
     public void PIDF_Vert() {

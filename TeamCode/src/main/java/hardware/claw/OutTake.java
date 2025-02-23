@@ -47,6 +47,7 @@ public class OutTake extends HardwareBase {
             wristPos -= 0.03;
             wrist.setPosition(wristPos);
         }
+//        wrist.setPosition(1);
     }
 
     public void closeClamp() {
