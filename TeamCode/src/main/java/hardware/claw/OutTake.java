@@ -31,7 +31,7 @@ public class OutTake extends HardwareBase {
         clawState = 0;
         clampClosed = false;
     }
-    public void clamp(boolean rb, boolean lb){
+    public void clamp(boolean rb, boolean lb) {
         if (rb) {
             clamp.setPosition(1);
         } else if (lb) {

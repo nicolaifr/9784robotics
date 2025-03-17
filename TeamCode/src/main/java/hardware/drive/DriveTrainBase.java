@@ -66,10 +66,10 @@ public class DriveTrainBase extends HardwareBase {
         double frontRightPower = (y - x - rx) / denominator;
         double backRightPower = (y + x - rx) / denominator;
 
-        leftFront.setPower(frontLeftPower* 0.75);
-        rightFront.setPower(frontRightPower * 0.75);
-        leftBack.setPower(backLeftPower * 0.75);
-        rightBack.setPower(backRightPower * 0.75);
+        leftFront.setPower(frontLeftPower);
+        rightFront.setPower(frontRightPower);
+        leftBack.setPower(backLeftPower);
+        rightBack.setPower(backRightPower);
 //        if (left_stick_x != 0 || left_stick_y != 0) {
 //            follower.setTeleOpMovementVectors(left_stick_y * 0.75, left_stick_x * 0.75, turn, true);
 //        } else {

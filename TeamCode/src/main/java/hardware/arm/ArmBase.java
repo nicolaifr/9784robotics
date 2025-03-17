@@ -21,7 +21,7 @@ public class ArmBase extends HardwareBase {
     public CRServo armRotateRight;
     public AnalogInput armRotateLeftEncoder;
     public AnalogInput armRotateRightEncoder;
-    public double rotatePos;
+    public double rotatePos = 0;
     public double wristPos;
 
 //PID rotate stuff
@@ -105,7 +105,7 @@ public class ArmBase extends HardwareBase {
         rightPower = Range.clip(rightPower, -1, 1);
         //setting motor power after all those calculations
         armRotateLeft.setPower(leftPower);
-        armRotateRight.setPower(leftPower);
+        armRotateRight.setPower(-leftPower);
 //        armRotateRight.setPower(rightPower);
 
         //telemetry for tuning
@@ -128,5 +128,11 @@ public class ArmBase extends HardwareBase {
 
     public double getRotateTarget() {
         return rotateTarget;
+    }
+
+    public void setPID(double p, double i, double d) {
+        pR = p;
+        iR = i;
+        dR = d;
     }
 }

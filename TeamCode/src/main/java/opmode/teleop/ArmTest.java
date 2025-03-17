@@ -1,6 +1,7 @@
 package opmode.teleop;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -13,9 +14,13 @@ import hardware.slides.SlidesBase;
 
 
 @TeleOp
+@Config
 public class ArmTest extends OpMode {
     ArmBase arm;
     Intake intake;
+    public static double P;
+    public static double I;
+    public static double D;
 
     int clawState;
     @Override
@@ -35,6 +40,7 @@ public class ArmTest extends OpMode {
         getTelemetry();
         IntakeControls();
         OutTakeControls();
+        arm.setPID(P, I, D);
     }
     public void OutTakeControls(){
 

@@ -92,13 +92,17 @@ public class SlidesBase extends HardwareBase {
     public void horizSlidesControls(boolean leftT, boolean rightT) {
         //code that uses the pidf to do cool sigma stuff
         //reversing Y cuz im like pretty sure thats how it is
-        if (rightT && horizSlides.getCurrentPosition() < 50) {
+//        if (rightT && horizSlides.getCurrentPosition() < 100) {
+        if (rightT) {
+
             horizSlides.setDirection(DcMotorSimple.Direction.REVERSE);
             horizSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             horizSlides.setPower(1);
             horizTarget = horizSlides.getCurrentPosition();
 
-        } else if (leftT && horizSlides.getCurrentPosition() > -10) {
+//        } else if (leftT && horizSlides.getCurrentPosition() > -100) {
+        } else if (leftT) {
+
             horizSlides.setDirection(DcMotorSimple.Direction.FORWARD);
             horizSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             horizSlides.setPower(1);
