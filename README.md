@@ -1,4 +1,15 @@
-## Welcome to the Offical Pedro Pathing Quickstart!  
+# Road Runner Quickstart
 
-Follow the steps on our [website](https://pedropathing.com/) to tune and setup!  
-Feel Free to reach out on the [Offical Pedro Pathing Discord Server](https://discord.gg/2GfC4qBP5s)!
+An example FTC project using [Road Runner](https://github.com/acmerobotics/road-runner).
+
+## Installation
+
+1. Download or clone this repo with `git clone --single-branch -b quickstart1 https://github.com/acmerobotics/road-runner-quickstart.git`.
+
+1. Open the project in Android Studio and build `TeamCode` like any other `ftc_app` project.
+
+1. If you have trouble with multidex, enable proguard by changing `useProguard` to `true` in `build.common.gradle`.
+
+## Documentation
+
+Check out the [online quickstart documentation](https://rr.brott.dev/docs/v0-5/quickstart/introduction/).
