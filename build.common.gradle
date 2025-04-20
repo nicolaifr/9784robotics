@@ -23,7 +23,7 @@ def useProguard = false
 
 android {
 
-    compileSdkVersion 29
+    compileSdkVersion 30
 
     signingConfigs {
         release {
@@ -47,10 +47,6 @@ android {
             storeFile rootProject.file('libs/ftc.debug.keystore')
             storePassword 'android'
         }
-    }
-
-    aaptOptions {
-        noCompress "tflite"
     }
 
     defaultConfig {
@@ -129,10 +125,6 @@ android {
 
     packagingOptions {
         pickFirst '**/*.so'
-    }
-    sourceSets.main {
-        jni.srcDirs = []
-        jniLibs.srcDir rootProject.file('libs')
     }
     ndkVersion '21.3.6528147'
 }
